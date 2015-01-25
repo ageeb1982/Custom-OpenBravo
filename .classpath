@@ -5,5 +5,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenBravoDefault"/>
 	<classpathentry kind="src" path="locales"/>
 	<classpathentry kind="src" path="reports"/>
+	<classpathentry kind="lib" path="lib/postgresql-9.2-1002.jdbc3.jar"/>
+	<classpathentry kind="lib" path="lib/JasperReportsTools/lib/groovy-all-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/JasperReportsTools/lib/jasperreports-5.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/JasperReportsTools/lib/servlet-api-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

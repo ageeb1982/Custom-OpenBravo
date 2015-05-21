@@ -6,5 +6,6 @@
 	<classpathentry kind="src" path="locales"/>
 	<classpathentry kind="src" path="reports"/>
 	<classpathentry kind="lib" path="lib/jasperreports-3.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/substance.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

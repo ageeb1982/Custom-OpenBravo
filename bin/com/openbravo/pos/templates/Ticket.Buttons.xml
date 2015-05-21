@@ -38,4 +38,6 @@
     <!-- <pricevisible value="true" /> -->
     <button key="button.discount" titlekey="button.discount" code="codeButton.discount" tootip="button.discount"/>
 	<button key="button.note" titlekey="button.note" code="codeButton.note" tootip="button.discount"/>
+	<event key="ticket.addline" code="Script.StockCurrentAdd"/>
+    <event key="ticket.setline" code="Script.StockCurrentSet"/>
 </configuration>

@@ -123,13 +123,21 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     // Catalogo de productos
     public final List<CategoryInfo> getRootCategories() throws BasicException {
         return new PreparedSentence(s
-            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID IS NULL ORDER BY NAME"
+            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID IS NULL"
+            		//	Dixon Martinez
+            		+ " AND IsActive = 'Y' "
+            		//	End Dixon Martinez
+            		+ "ORDER BY NAME"
             , null
             , CategoryInfo.getSerializerRead()).list();
     }
     public final List<CategoryInfo> getSubcategories(String category) throws BasicException  {
         return new PreparedSentence(s
-            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID = ? ORDER BY NAME"
+            , "SELECT ID, NAME, IMAGE FROM CATEGORIES WHERE PARENTID = ? "
+            		//	Dixon Martinez
+		    		+ " AND IsActive = 'Y' "
+		    		//	End Dixon Martinez
+            		+ " ORDER BY NAME"
             , SerializerWriteString.INSTANCE
             , CategoryInfo.getSerializerRead()).list(category);
     }
@@ -224,7 +232,11 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     }
     public final SentenceList getCategoriesList() {
         return new StaticSentence(s
-            , "SELECT ID, NAME, IMAGE FROM CATEGORIES ORDER BY NAME"
+            , "SELECT ID, NAME, IMAGE FROM CATEGORIES "
+            		//	Dixon Martinez
+            		+ " WHERE IsActive = 'Y'"
+            		//	Dixon Martinez
+            		+ "ORDER BY NAME"
             , null
             , CategoryInfo.getSerializerRead());
     }
@@ -274,7 +286,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return (CustomerInfoExt) new PreparedSentence(s
                 , "SELECT ID, TAXID, SEARCHKEY, NAME, CARD, TAXCATEGORY, NOTES, MAXDEBT, VISIBLE, CURDATE, CURDEBT" +
                   ", FIRSTNAME, LASTNAME, EMAIL, PHONE, PHONE2, FAX" +
-                  ", ADDRESS, ADDRESS2, POSTAL, CITY, REGION, COUNTRY" +
+                  ", ADDRESS, ADDRESS2, POSTAL, CITY, REGION, COUNTRY"
+                  //	Dixon Martinez
+                  + ",IsTaxExempt" +
+                  //	End Dixon Martinez
                   " FROM CUSTOMERS WHERE CARD = ? AND VISIBLE = " + s.DB.TRUE()
                 , SerializerWriteString.INSTANCE
                 , new CustomerExtRead()).find(card);
@@ -284,7 +299,11 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return (CustomerInfoExt) new PreparedSentence(s
                 , "SELECT ID, TAXID, SEARCHKEY, NAME, CARD, TAXCATEGORY, NOTES, MAXDEBT, VISIBLE, CURDATE, CURDEBT" +
                   ", FIRSTNAME, LASTNAME, EMAIL, PHONE, PHONE2, FAX" +
-                  ", ADDRESS, ADDRESS2, POSTAL, CITY, REGION, COUNTRY" +
+                  ", ADDRESS, ADDRESS2, POSTAL, CITY, REGION, COUNTRY" 
+                  //	Dixon Martinez
+                  + ",IsTaxExempt" +
+                  //	End Dixon Martinez
+
                 " FROM CUSTOMERS WHERE ID = ?"
                 , SerializerWriteString.INSTANCE
                 , new CustomerExtRead()).find(id);
@@ -701,10 +720,19 @@ public class DataLogicSales extends BeanFactoryDataSingle {
     public final TableDefinition getTableCategories() {
         return new TableDefinition(s,
             "CATEGORIES"
-            , new String[] {"ID", "NAME", "PARENTID", "IMAGE"}
-            , new String[] {"ID", AppLocal.getIntString("Label.Name"), "", AppLocal.getIntString("label.image")}
-            , new Datas[] {Datas.STRING, Datas.STRING, Datas.STRING, Datas.IMAGE}
-            , new Formats[] {Formats.STRING, Formats.STRING, Formats.STRING, Formats.NULL}
+            , new String[] {"ID", "NAME", "PARENTID", "IMAGE","IsActive"}
+            , new String[] {"ID", AppLocal.getIntString("Label.Name"), "", AppLocal.getIntString("label.image")
+        	//	Dixon Martinez
+        	, AppLocal.getIntString("label.IsActive")}
+        	//	End Dixon Martinez
+            , new Datas[] {Datas.STRING, Datas.STRING, Datas.STRING, Datas.IMAGE
+            	//	Dixon Martinez
+            	, Datas.STRING}
+            	//	End Dixon Martinez}
+            , new Formats[] {Formats.STRING, Formats.STRING, Formats.STRING, Formats.NULL
+        		//	Dixon Martinez
+            	, Formats.STRING}
+            	//	End Dixon Martinez
             , new int[] {0}
         );
     }
@@ -758,7 +786,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
         return new TableDefinition(s,
             "LOCATIONS"
             , new String[] {"ID", "NAME", "ADDRESS", "IsDefault"}
-            , new String[] {"ID", AppLocal.getIntString("label.locationname"), AppLocal.getIntString("label.locationaddress"), "IsDefault"}
+            , new String[] {"ID", AppLocal.getIntString("label.locationname"), AppLocal.getIntString("label.locationaddress"), AppLocal.getIntString("label.IsDefault")}
             , new Datas[] {Datas.STRING, Datas.STRING, Datas.STRING, Datas.STRING}
             , new Formats[] {Formats.STRING, Formats.STRING, Formats.STRING, Formats.STRING}
             , new int[] {0}
@@ -790,6 +818,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             c.setCity(dr.getString(21));
             c.setRegion(dr.getString(22));
             c.setCountry(dr.getString(23));
+            
+            //	Dixon Martinez
+            c.setIsTaxExempt(dr.getBoolean(24) ? "Y" : "N");
+            //	End Dixon Martinez
 
             return c;
         }

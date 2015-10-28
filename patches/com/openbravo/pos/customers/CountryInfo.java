@@ -5,20 +5,11 @@ package com.openbravo.pos.customers;
 
 
 /**
- * @author erp-consultor-1
+ * @author dixon22ma
  *
  */
 public class CountryInfo {
 
-	private String m_C_Country_ID	= "";
-	private String m_IsActive 		= "";
-	private String m_Name			= "";
-	private String m_Description	= "";
-	private String m_CountryCoude	= "";
-	private String m_HasRegion		= "";
-	private String m_RegionName		= "";
-	private String m_C_Currency_ID	= "";
-	
 	/**
 	 * @param m_C_Country_ID
 	 * @param m_IsActive
@@ -48,6 +39,17 @@ public class CountryInfo {
 		this.m_Name = m_Name;
 	}
 
+
+	private String m_C_Country_ID	= "";
+	private String m_IsActive 		= "";
+	private String m_Name			= "";
+	private String m_Description	= "";
+	private String m_CountryCoude	= "";
+	private String m_HasRegion		= "";
+	private String m_RegionName		= "";
+	private String m_C_Currency_ID	= "";
+	
+	
 	/**
 	 * @return the m_C_Country_ID
 	 */

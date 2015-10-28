@@ -21,10 +21,12 @@
  -->
 
 <line>
-    <column name="label.item" width="125" align="left" value="&lt;html&gt;#if ($ticketline.isProductCom()) &lt;i&gt;*&amp;nbsp;&amp;nbsp;${ticketline.printName()}&lt;/i&gt; #else ${ticketline.printName()} #end&lt;br&gt;${ticketline.getProductAttSetInstDesc()}"/>
-    <column name="label.price" width="80" align="right" value="${ticketline.printPrice()}"/>
+    <column name="label.item" width="115" align="left" value="&lt;html&gt;#if ($ticketline.isProductCom()) &lt;i&gt;*&amp;nbsp;&amp;nbsp;${ticketline.printName()}&lt;/i&gt; #else ${ticketline.printName()} #end&lt;br&gt;${ticketline.getProductAttSetInstDesc()}"/>
+    <column name="label.price" width="40" align="right" value="${ticketline.printPrice()}"/>
     <column name="label.units" width="50" align="right" value="x${ticketline.printMultiply()}"/>
-    <column name="label.tax" width="100" align="right" value="${ticketline.printTaxRate()}"/>
-    <column name="label.value" width="80" align="right" value="${ticketline.printSubValue()}"/>
-    <!--<column name="label.note" width="60" align="right" value="${ticketline.getProperty('notes','??')}"/>-->
+    <column name="label.tax" width="60" align="right" value="${ticketline.printTaxRate()}"/>
+    <column name="label.value" width="70" align="right" value="${ticketline.printSubValue()}"/>
+    <column name="label.sendorder" width="20" align="left" value="${ticketline.getProperty('printkb','??')}"/> 
+    <column name="label.sendstatus" width="10" align="left" value="${ticketline.getProperty('sendstatus','??')}"/>
+    <column name="button.note" width="40" align="left" value="${ticketline.getProperty('notes','??')}"/>
 </line>

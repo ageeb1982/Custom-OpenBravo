@@ -1,4 +1,4 @@
-﻿CREATE TABLE C_Currency(
+CREATE TABLE C_Currency(
   C_Currency_id CHARACTER VARYING NOT NULL,
   IsActive CHARACTER(1) NOT NULL DEFAULT 'Y'::bpchar,
   Iso_Code CHARACTER(3) NOT NULL,

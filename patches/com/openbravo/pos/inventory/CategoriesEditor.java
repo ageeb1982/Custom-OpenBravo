@@ -103,8 +103,6 @@ public class CategoriesEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(false);
         m_jCategory.setEnabled(false);
         m_jImage.setEnabled(false);
-        m_jCatalogDelete.setEnabled(false);
-        m_jCatalogAdd.setEnabled(false);
         //	Dixon Martinez
         m_IsActive.setEnabled(true);
         //	End Dixon Martinez
@@ -117,8 +115,6 @@ public class CategoriesEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(true);
         m_jCategory.setEnabled(true);
         m_jImage.setEnabled(true);
-        m_jCatalogDelete.setEnabled(false);
-        m_jCatalogAdd.setEnabled(false);
         //	Dixon Martinez
         m_IsActive.setEnabled(true);
         //	End Dixon Martinez
@@ -132,8 +128,6 @@ public class CategoriesEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(false);
         m_jCategory.setEnabled(false);
         m_jImage.setEnabled(false);
-        m_jCatalogDelete.setEnabled(false);
-        m_jCatalogAdd.setEnabled(false);
         //	Dixon Martinez
         m_IsActive.setEnabled(false);
         //	End Dixon Martinez
@@ -148,8 +142,6 @@ public class CategoriesEditor extends JPanel implements EditorRecord {
         m_jName.setEnabled(true);
         m_jCategory.setEnabled(true);
         m_jImage.setEnabled(true);
-        m_jCatalogDelete.setEnabled(true);
-        m_jCatalogAdd.setEnabled(true);
         //	Dixon Martinez
         m_IsActive.setSelected(cat[4].toString().equals("Y") ? true : false);
         //	End Dixon Martinez
@@ -187,8 +179,6 @@ public class CategoriesEditor extends JPanel implements EditorRecord {
         m_jName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         m_jImage = new com.openbravo.data.gui.JImageEditor();
-        m_jCatalogAdd = new javax.swing.JButton();
-        m_jCatalogDelete = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         m_jCategory = new javax.swing.JComboBox();
 
@@ -206,24 +196,6 @@ public class CategoriesEditor extends JPanel implements EditorRecord {
         add(m_jImage);
         m_jImage.setBounds(100, 80, 240, 180);
 
-        m_jCatalogAdd.setText(AppLocal.getIntString("button.catalogadd")); // NOI18N
-        m_jCatalogAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jCatalogAddActionPerformed(evt);
-            }
-        });
-        add(m_jCatalogAdd);
-        m_jCatalogAdd.setBounds(370, 20, 170, 24);
-
-        m_jCatalogDelete.setText(AppLocal.getIntString("button.catalogdel")); // NOI18N
-        m_jCatalogDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                m_jCatalogDeleteActionPerformed(evt);
-            }
-        });
-        add(m_jCatalogDelete);
-        m_jCatalogDelete.setBounds(370, 50, 170, 24);
-
         jLabel5.setText(AppLocal.getIntString("label.prodcategory")); // NOI18N
         add(jLabel5);
         jLabel5.setBounds(20, 50, 90, 14);
@@ -231,44 +203,20 @@ public class CategoriesEditor extends JPanel implements EditorRecord {
         m_jCategory.setBounds(100, 50, 180, 20);
         
         m_IsActive = new JCheckBox("");
-        m_IsActive.setBounds(100, 269, 129, 23);
+        m_IsActive.setBounds(410, 20, 129, 14);
         add(m_IsActive);
         
         JLabel lblActivo = new JLabel();
         lblActivo.setText(AppLocal.getIntString("label.IsActive"));
-        lblActivo.setBounds(20, 273, 70, 15);
+        lblActivo.setBounds(332, 20, 70, 15);
         add(lblActivo);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void m_jCatalogDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCatalogDeleteActionPerformed
-
-        try {
-            m_sentdel.exec(m_id);
-        } catch (BasicException e) {
-            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"), e));
-        }
-        
-    }//GEN-LAST:event_m_jCatalogDeleteActionPerformed
-
-    private void m_jCatalogAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_jCatalogAddActionPerformed
-
-        try {
-            Object param = m_id;
-            m_sentdel.exec(param); // primero borramos
-            m_sentadd.exec(param); // y luego insertamos lo que queda
-        } catch (BasicException e) {
-            JMessageDialog.showMessage(this, new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotexecute"), e));
-        }
-
-    }//GEN-LAST:event_m_jCatalogAddActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JButton m_jCatalogAdd;
-    private javax.swing.JButton m_jCatalogDelete;
     private javax.swing.JComboBox m_jCategory;
     private com.openbravo.data.gui.JImageEditor m_jImage;
     private javax.swing.JTextField m_jName;

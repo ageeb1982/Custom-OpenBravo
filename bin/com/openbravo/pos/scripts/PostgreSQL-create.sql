@@ -84,27 +84,21 @@ INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('13', 'Printer.Inventor
 INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('14', 'Menu.Root', 0, $FILE{/com/openbravo/pos/templates/Menu.Root.txt});
 INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('15', 'Printer.CustomerPaid', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid.xml});
 INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('16', 'Printer.CustomerPaid2', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid2.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('17', 'payment.cash', 0, $FILE{/com/openbravo/pos/templates/payment.cash.txt});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('18', 'banknote.100BsF', 1, $FILE{/com/openbravo/pos/templates/banknote.100BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('19', 'banknote.10BsF', 1, $FILE{/com/openbravo/pos/templates/banknote.10BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('20', 'banknote.20BsF', 1, $FILE{/com/openbravo/pos/templates/banknote.20BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('21', 'banknote.2BsF', 1, $FILE{/com/openbravo/pos/templates/banknote.2BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('22', 'banknote.50BsF', 1, $FILE{/com/openbravo/pos/templates/banknote.50BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('23', 'banknote.5BsF', 1, $FILE{/com/openbravo/pos/templates/banknote.5BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('24', 'coin.2euro', 1, $FILE{/com/openbravo/pos/templates/coin.2euro.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('25', 'coin.1euro', 1, $FILE{/com/openbravo/pos/templates/coin.1euro.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('26', 'coin.50cent', 1, $FILE{/com/openbravo/pos/templates/coin.50cent.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('27', 'coin.20cent', 1, $FILE{/com/openbravo/pos/templates/coin.20cent.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('28', 'coin.10cent', 1, $FILE{/com/openbravo/pos/templates/coin.10cent.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('29', 'coin.5cent', 1, $FILE{/com/openbravo/pos/templates/coin.5cent.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('30', 'coin.2cent', 1, $FILE{/com/openbravo/pos/templates/coin.2cent.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('31', 'coin.1cent', 1, $FILE{/com/openbravo/pos/templates/coin.1cent.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('17', 'payment.cash_lve', 0, $FILE{/com/openbravo/pos/templates/payment.cash_lve.txt});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('18', 'money.100BsF', 1, $FILE{/com/openbravo/pos/templates/money.100BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('19', 'money.10BsF', 1, $FILE{/com/openbravo/pos/templates/money.10BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('20', 'money.20BsF', 1, $FILE{/com/openbravo/pos/templates/money.20BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('21', 'money.2BsF', 1, $FILE{/com/openbravo/pos/templates/money.2BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('22', 'money.50BsF', 1, $FILE{/com/openbravo/pos/templates/money.50BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('23', 'money.5BsF', 1, $FILE{/com/openbravo/pos/templates/money.5BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('24', 'coin.0,01BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,01BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('25', 'coin.0,05BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,05BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('26', 'coin.0,10BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,10BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('27', 'coin.0,125BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,125BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('28', 'coin.0,25BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,25BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('29', 'coin.0,5BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,5BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('30', 'coin.1BsF', 1, $FILE{/com/openbravo/pos/templates/coin.1BsF.png});
 INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('32', 'Printer.PartialCash', 0, $FILE{/com/openbravo/pos/templates/Printer.PartialCash.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('33', 'codeButton.discount', 0, $FILE{/com/openbravo/pos/templates/codeButton.discount.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('34', 'codeButton.note', 0, $FILE{/com/openbravo/pos/templates/codeButton.note.xml});
-
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('35', 'Script.StockCurrentAdd', 0, $FILE{/com/openbravo/pos/templates/Script.StockCurrentAdd.txt});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('36', 'Script.StockCurrentSet', 0, $FILE{/com/openbravo/pos/templates/Script.StockCurrentSet.txt});
 
 
 
@@ -139,30 +133,24 @@ CREATE TABLE CUSTOMERS (
     VISIBLE BOOLEAN NOT NULL DEFAULT TRUE,
     CURDATE TIMESTAMP,
     CURDEBT DOUBLE PRECISION,
-    IsTaxExempt CHARACTER(1) DEFAULT 'N',
     PRIMARY KEY (ID),
-    CONSTRAINT CUSTOMERS_TAXCAT FOREIGN KEY (TAXCATEGORY) REFERENCES TAXCUSTCATEGORIES(ID),
-    CONSTRAINT CUSTOMERS_IsTaxExempt_check CHECK (IsTaxExempt = ANY (ARRAY['Y'::bpchar, 'N'::bpchar]))
+    CONSTRAINT CUSTOMERS_TAXCAT FOREIGN KEY (TAXCATEGORY) REFERENCES TAXCUSTCATEGORIES(ID)
 );
 CREATE UNIQUE INDEX CUSTOMERS_SKEY_INX ON CUSTOMERS(SEARCHKEY);
 CREATE INDEX CUSTOMERS_TAXID_INX ON CUSTOMERS(TAXID);
 CREATE INDEX CUSTOMERS_NAME_INX ON CUSTOMERS(NAME);
 CREATE INDEX CUSTOMERS_CARD_INX ON CUSTOMERS(CARD);
 
-
-
 CREATE TABLE CATEGORIES (
     ID VARCHAR NOT NULL,
     NAME VARCHAR NOT NULL,
     PARENTID VARCHAR,
     IMAGE BYTEA,
-    IsActive CHARACTER VARYING(1) DEFAULT 'N',
     PRIMARY KEY(ID),
-    CONSTRAINT CATEGORIES_FK_1 FOREIGN KEY (PARENTID) REFERENCES CATEGORIES(ID),
-    CONSTRAINT CATEGORIES_IsActive_check CHECK (IsActive = ANY (ARRAY['Y'::bpchar, 'N'::bpchar]))
+    CONSTRAINT CATEGORIES_FK_1 FOREIGN KEY (PARENTID) REFERENCES CATEGORIES(ID)
 );
 CREATE UNIQUE INDEX CATEGORIES_NAME_INX ON CATEGORIES(NAME);
-INSERT INTO CATEGORIES(ID, NAME, IsActive) VALUES ('000', 'Estandar', 'Y');
+INSERT INTO CATEGORIES(ID, NAME) VALUES ('000', 'Estandar');
 
 
 
@@ -291,15 +279,10 @@ CREATE TABLE LOCATIONS (
     ID VARCHAR NOT NULL,
     NAME VARCHAR NOT NULL,
     ADDRESS VARCHAR,
-    IsDefault CHARACTER VARYING (1) DEFAULT 'N',
-    PRIMARY KEY (ID),
-    CONSTRAINT LocationsIsDefault_Check CHECK (IsDefault = ANY (ARRAY['Y'::bpchar, 'N'::bpchar]))
+    PRIMARY KEY (ID)
 );
-
-
 CREATE UNIQUE INDEX LOCATIONS_NAME_INX ON LOCATIONS(NAME);
-INSERT INTO LOCATIONS(ID, NAME,ADDRESS, IsDefault) VALUES('0', 'General', NULL, 'Y');
-
+INSERT INTO LOCATIONS(ID, NAME,ADDRESS) VALUES('0', 'General', NULL);
 
 CREATE TABLE STOCKDIARY (
     ID VARCHAR NOT NULL,

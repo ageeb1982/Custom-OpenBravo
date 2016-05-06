@@ -68,6 +68,8 @@ import com.openbravo.pos.ticket.TicketInfo;
 import com.openbravo.pos.ticket.TicketLineInfo;
 import com.openbravo.pos.util.JRPrinterAWT300;
 import com.openbravo.pos.util.ReportUtils;
+import java.io.IOException;
+import net.sf.jasperreports.engine.JRException;
 
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -87,11 +89,11 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFactoryApp, TicketsEditor {
    
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 6475490073932528270L;
+    * 
+    */
+    private static final long serialVersionUID = 6475490073932528270L;
 	
-	// Variable numerica
+    // Variable numerica
     private final static int NUMBERZERO = 0;
     private final static int NUMBERVALID = 1;
     
@@ -193,14 +195,17 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_oTicketExt = null;      
     }
     
+    @Override
     public Object getBean() {
         return this;
     }
     
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
+    @Override
     public void activate() throws BasicException {
 
         paymentdialogreceipt = JPaymentSelectReceipt.getDialog(this);
@@ -250,6 +255,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         m_ticketsbag.activate();        
     }
     
+    @Override
     public boolean deactivate() {
 
         return m_ticketsbag.deactivate();
@@ -259,6 +265,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     protected abstract Component getSouthComponent();
     protected abstract void resetSouthComponent();
      
+    @Override
     public void setActiveTicket(TicketInfo oTicket, Object oTicketExt) {
        
         m_oTicket = oTicket;
@@ -276,6 +283,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         refreshTicket();               
     }
     
+    @Override
     public TicketInfo getActiveTicket() {
         return m_oTicket;
     }
@@ -303,6 +311,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 //Make disable Search and Edit Buttons
                 m_jEditLine.setVisible(false);
                 m_jList.setVisible(false);
+                m_jDelete.setVisible(false);
+                jEditAttributes.setVisible(false);
             }
             
             // Refresh ticket taxes
@@ -329,6 +339,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             // activo el tecleador...
             m_jKeyFactory.setText(null);       
             java.awt.EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     m_jKeyFactory.requestFocus();
                 }
@@ -349,7 +360,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         }
     }
     
-    private void paintTicketLine(int index, TicketLineInfo oLine){
+    protected void paintTicketLine(int index, TicketLineInfo oLine){
         
         if (executeEventAndRefresh("ticket.setline", new ScriptArg("index", index), new ScriptArg("line", oLine)) == null) {
 
@@ -437,7 +448,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
 		return oLine;
 	}
 
-	private void removeTicketLine(int i){
+	protected void removeTicketLine(int i){
         
         if (executeEventAndRefresh("ticket.removeline", new ScriptArg("index", i)) == null) {
         
@@ -498,9 +509,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     private double getPorValue() {
         try {
             return Double.parseDouble(m_jPor.getText().substring(1));                
-        } catch (NumberFormatException e){
-            return 1.0;
-        } catch (StringIndexOutOfBoundsException e){
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e){
             return 1.0;
         }
     }
@@ -565,7 +574,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             try {
                 Double value = m_App.getDeviceScale().readWeight();
                 if (value != null) {
-                    incProduct(value.doubleValue(), prod);
+                    incProduct(value, prod);
                 }
             } catch (ScaleException e) {
                 Toolkit.getDefaultToolkit().beep();                
@@ -984,10 +993,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 script.put("ticket", ticket);
                 script.put("place", ticketext);
                 m_TTP.printTicket(script.eval(sresource).toString());
-            } catch (ScriptException e) {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
-                msg.show(JPanelTicket.this);
-            } catch (TicketPrinterException e) {
+            } catch (ScriptException | TicketPrinterException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintticket"), e);
                 msg.show(JPanelTicket.this);
             }
@@ -1031,7 +1037,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
             
             JRPrinterAWT300.printPages(jp, 0, jp.getPages().size() - 1, service);
             
-        } catch (Exception e) {
+        } catch (JRException | IOException | ClassNotFoundException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotloadreport"), e);
             msg.show(this);
         }               
@@ -1045,10 +1051,7 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
                 ScriptEngine script = ScriptFactory.getScriptEngine(ScriptFactory.VELOCITY);
                 script.put("ticketline", oLine);
                 m_TTP.printTicket(script.eval(dlSystem.getResourceAsXML("Printer.TicketLine")).toString());
-            } catch (ScriptException e) {
-                MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintline"), e);
-                msg.show(JPanelTicket.this);
-            } catch (TicketPrinterException e) {
+            } catch (ScriptException | TicketPrinterException e) {
                 MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotprintline"), e);
                 msg.show(JPanelTicket.this);
             }
@@ -1131,8 +1134,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     }
      
     public static class ScriptArg {
-        private String key;
-        private Object value;
+        private final String key;
+        private final Object value;
         
         public ScriptArg(String key, Object value) {
             this.key = key;
@@ -1148,8 +1151,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
     
     public class ScriptObject {
         
-        private TicketInfo ticket;
-        private Object ticketext;
+        private final TicketInfo ticket;
+        private final Object ticketext;
         
         private int selectedindex;
         

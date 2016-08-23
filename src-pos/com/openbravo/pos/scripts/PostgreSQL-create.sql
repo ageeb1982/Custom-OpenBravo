@@ -66,7 +66,7 @@ CREATE TABLE POS_Resources (
     ResourceContent BYTEA,
     PRIMARY KEY (POS_Resources_ID)
 );
-CREATE UNIQUE INDEX POS_Resources_NAME_INX ON RESOURCES(NAME);
+CREATE UNIQUE INDEX POS_Resources_NAME_INX ON POS_Resources(NAME);
 INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('0', 'Printer.Start', 0, $FILE{/com/openbravo/pos/templates/Printer.Start.xml});
 INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('1', 'Printer.Ticket', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket.xml});
 INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('2', 'Printer.Ticket2', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket2.xml});

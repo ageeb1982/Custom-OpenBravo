@@ -105,7 +105,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
                 , "INSERT INTO POS_Resources(POS_Resources_ID, NAME, ResourceType, ResourceContent) VALUES (?, ?, ?, ?)"
                 , new SerializerWriteBasic(resourcedata));
         m_resourcebytesupdate = new PreparedSentence(s
-                , "UPDATE POS_Resources SET NAME = ?, ResourceType = ?, ResourceContent = ? WHERE POS_Resources_ID = ?"
+                , "UPDATE POS_Resources SET NAME = ?, ResourceType = ?, ResourceContent = ? WHERE NAME = ?"
                 , new SerializerWriteBasicExt(resourcedata, new int[] {1, 2, 3, 1}));
         
         m_rolepermissions = new PreparedSentence(s

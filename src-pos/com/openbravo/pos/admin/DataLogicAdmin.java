@@ -67,8 +67,8 @@ public class DataLogicAdmin extends BeanFactoryDataSingle {
         
         m_tresources = new TableDefinition(s,
             "POS_Resources"
-            , new String[] {"POS_Resources_ID", "NAME", "ResourcesType", "ResourcesContent"}
-            , new String[] {"ID", AppLocal.getIntString("Label.Name"), AppLocal.getIntString("label.type"), "ResourcesContent"}
+            , new String[] {"POS_Resources_ID", "NAME", "ResourcesType", "ResourceContent"}
+            , new String[] {"ID", AppLocal.getIntString("Label.Name"), AppLocal.getIntString("label.type"), "ResourceContent"}
             , new Datas[] {Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES}
             , new Formats[] {Formats.STRING, Formats.STRING, Formats.INT, Formats.NULL}
             , new int[] {0}

@@ -20,13 +20,13 @@
 -- Database initial script for POSTGRESQL
 -- v2.30.2
 
-CREATE TABLE APPLICATIONS (
-    ID VARCHAR NOT NULL,
+CREATE TABLE POS_Applications (
+    POS_Applications_ID VARCHAR NOT NULL,
     NAME VARCHAR NOT NULL,
     VERSION VARCHAR NOT NULL,
-    PRIMARY KEY (ID)
+    PRIMARY KEY (POS_Applications_ID)
 );
-INSERT INTO APPLICATIONS(ID, NAME, VERSION) VALUES($APP_ID{}, $APP_NAME{}, $APP_VERSION{});
+INSERT INTO POS_Applications (POS_Applications_ID, NAME, VERSION) VALUES($APP_ID{}, $APP_NAME{}, $APP_VERSION{});
 
 CREATE TABLE ROLES (
     ID VARCHAR NOT NULL,
@@ -59,46 +59,46 @@ INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, VISIBLE, IMAGE) VALUES ('1', 'En
 INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, VISIBLE, IMAGE) VALUES ('2', 'Empleado', NULL, '2', TRUE, NULL);
 INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, VISIBLE, IMAGE) VALUES ('3', 'Invitado', NULL, '3', TRUE, NULL);
 
-CREATE TABLE RESOURCES (
-    ID VARCHAR NOT NULL,
+CREATE TABLE POS_Resources (
+    POS_Resources_ID VARCHAR NOT NULL,
     NAME VARCHAR NOT NULL,
-    RESTYPE INTEGER NOT NULL,
-    CONTENT BYTEA,
-    PRIMARY KEY (ID)
+    ResourcesType INTEGER NOT NULL,
+    ResourceContent BYTEA,
+    PRIMARY KEY (POS_Resources_ID)
 );
-CREATE UNIQUE INDEX RESOURCES_NAME_INX ON RESOURCES(NAME);
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('0', 'Printer.Start', 0, $FILE{/com/openbravo/pos/templates/Printer.Start.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('1', 'Printer.Ticket', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('2', 'Printer.Ticket2', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket2.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('3', 'Printer.TicketPreview', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketPreview.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('4', 'Printer.TicketTotal', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketTotal.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('5', 'Printer.OpenDrawer', 0, $FILE{/com/openbravo/pos/templates/Printer.OpenDrawer.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('6', 'Printer.Ticket.Logo', 1, $FILE{/com/openbravo/pos/templates/Printer.Ticket.Logo.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('7', 'Printer.TicketLine', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketLine.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('8', 'Printer.CloseCash', 0, $FILE{/com/openbravo/pos/templates/Printer.CloseCash.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('9', 'Window.Logo', 1, $FILE{/com/openbravo/pos/templates/Window.Logo.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('10', 'Window.Title', 0, $FILE{/com/openbravo/pos/templates/Window.Title.txt});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('11', 'Ticket.Buttons', 0, $FILE{/com/openbravo/pos/templates/Ticket.Buttons.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('12', 'Ticket.Line', 0, $FILE{/com/openbravo/pos/templates/Ticket.Line.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('13', 'Printer.Inventory', 0, $FILE{/com/openbravo/pos/templates/Printer.Inventory.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('14', 'Menu.Root', 0, $FILE{/com/openbravo/pos/templates/Menu.Root.txt});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('15', 'Printer.CustomerPaid', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('16', 'Printer.CustomerPaid2', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid2.xml});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('17', 'payment.cash_lve', 0, $FILE{/com/openbravo/pos/templates/payment.cash_lve.txt});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('18', 'money.100BsF', 1, $FILE{/com/openbravo/pos/templates/money.100BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('19', 'money.10BsF', 1, $FILE{/com/openbravo/pos/templates/money.10BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('20', 'money.20BsF', 1, $FILE{/com/openbravo/pos/templates/money.20BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('21', 'money.2BsF', 1, $FILE{/com/openbravo/pos/templates/money.2BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('22', 'money.50BsF', 1, $FILE{/com/openbravo/pos/templates/money.50BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('23', 'money.5BsF', 1, $FILE{/com/openbravo/pos/templates/money.5BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('24', 'coin.0,01BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,01BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('25', 'coin.0,05BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,05BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('26', 'coin.0,10BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,10BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('27', 'coin.0,125BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,125BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('28', 'coin.0,25BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,25BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('29', 'coin.0,5BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,5BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('30', 'coin.1BsF', 1, $FILE{/com/openbravo/pos/templates/coin.1BsF.png});
-INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('32', 'Printer.PartialCash', 0, $FILE{/com/openbravo/pos/templates/Printer.PartialCash.xml});
+CREATE UNIQUE INDEX POS_Resources_NAME_INX ON RESOURCES(NAME);
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('0', 'Printer.Start', 0, $FILE{/com/openbravo/pos/templates/Printer.Start.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('1', 'Printer.Ticket', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('2', 'Printer.Ticket2', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket2.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('3', 'Printer.TicketPreview', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketPreview.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('4', 'Printer.TicketTotal', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketTotal.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('5', 'Printer.OpenDrawer', 0, $FILE{/com/openbravo/pos/templates/Printer.OpenDrawer.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('6', 'Printer.Ticket.Logo', 1, $FILE{/com/openbravo/pos/templates/Printer.Ticket.Logo.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('7', 'Printer.TicketLine', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketLine.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('8', 'Printer.CloseCash', 0, $FILE{/com/openbravo/pos/templates/Printer.CloseCash.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('9', 'Window.Logo', 1, $FILE{/com/openbravo/pos/templates/Window.Logo.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('10', 'Window.Title', 0, $FILE{/com/openbravo/pos/templates/Window.Title.txt});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('11', 'Ticket.Buttons', 0, $FILE{/com/openbravo/pos/templates/Ticket.Buttons.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('12', 'Ticket.Line', 0, $FILE{/com/openbravo/pos/templates/Ticket.Line.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('13', 'Printer.Inventory', 0, $FILE{/com/openbravo/pos/templates/Printer.Inventory.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('14', 'Menu.Root', 0, $FILE{/com/openbravo/pos/templates/Menu.Root.txt});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('15', 'Printer.CustomerPaid', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('16', 'Printer.CustomerPaid2', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid2.xml});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('17', 'payment.cash_lve', 0, $FILE{/com/openbravo/pos/templates/payment.cash_lve.txt});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('18', 'money.100BsF', 1, $FILE{/com/openbravo/pos/templates/money.100BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('19', 'money.10BsF', 1, $FILE{/com/openbravo/pos/templates/money.10BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('20', 'money.20BsF', 1, $FILE{/com/openbravo/pos/templates/money.20BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('21', 'money.2BsF', 1, $FILE{/com/openbravo/pos/templates/money.2BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('22', 'money.50BsF', 1, $FILE{/com/openbravo/pos/templates/money.50BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('23', 'money.5BsF', 1, $FILE{/com/openbravo/pos/templates/money.5BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('24', 'coin.0,01BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,01BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('25', 'coin.0,05BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,05BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('26', 'coin.0,10BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,10BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('27', 'coin.0,125BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,125BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('28', 'coin.0,25BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,25BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('29', 'coin.0,5BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,5BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('30', 'coin.1BsF', 1, $FILE{/com/openbravo/pos/templates/coin.1BsF.png});
+INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent) VALUES('32', 'Printer.PartialCash', 0, $FILE{/com/openbravo/pos/templates/Printer.PartialCash.xml});
 
 
 

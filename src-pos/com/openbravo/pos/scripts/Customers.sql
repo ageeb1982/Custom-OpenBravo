@@ -1,0 +1,2 @@
+INSERT INTO public.customers(id, searchkey, taxid, name, taxcategory, card, maxdebt, address, address2, postal, city, region, country, firstname, lastname, email, phone, phone2, fax, notes, visible, curdate, curdebt)
+  VALUES('9e9bfb1e-d4e9-4b55-ad17-614bfbc11b52', 'V199023310', 'V199023310', 'Dixon Martinez', '3602ca24-105a-45fd-b6f7-1330b1d2606c', NULL, 10000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', true, NULL, NULL);

@@ -1,3 +1,24 @@
+--    Openbravo POS is a point of sales application designed for touch screens.
+--    Copyright (C) 2007-2010 Openbravo, S.L.
+--    http://sourceforge.net/projects/openbravopos
+--
+--    This file is part of Openbravo POS.
+--
+--    Openbravo POS is free software: you can redistribute it and/or modify
+--    it under the terms of the GNU General Public License as published by
+--    the Free Software Foundation, either version 3 of the License, or
+--    (at your option) any later version.
+--
+--    Openbravo POS is distributed in the hope that it will be useful,
+--    but WITHOUT ANY WARRANTY; without even the implied warranty of
+--    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--    GNU General Public License for more details.
+--
+--    You should have received a copy of the GNU General Public License
+--    along with Openbravo POS.  If not, see <http://www.gnu.org/licenses/>.
+
+-- Database initial script for POSTGRESQL
+-- v2.30.2
 
 /* Drop Indexes */
 
@@ -895,8 +916,6 @@ CREATE UNIQUE INDEX stockcurrent_inx ON public.stockcurrent USING BTREE (locatio
 CREATE INDEX stockdiary_inx_1 ON public.stockdiary USING BTREE (datenew);
 CREATE INDEX tickets_ticketid ON public.tickets USING BTREE (tickettype, ticketid);
 
-
-
 INSERT INTO POS_Applications (POS_Applications_ID, NAME, VERSION) VALUES($APP_ID{}, $APP_NAME{}, $APP_VERSION{});
 
 INSERT INTO ROLES(ID, NAME, PERMISSIONS) VALUES('0', 'Rol Administrador', $FILE{/com/openbravo/pos/templates/Role.Administrator.xml} );
@@ -945,11 +964,16 @@ INSERT INTO POS_Resources(POS_Resources_ID, Name, ResourcesType, ResourceContent
 
 INSERT INTO CATEGORIES(ID, NAME) VALUES ('000', 'Estandar');
 
-INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('000', 'Excento');
-INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('001', 'Estandar');
+INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('000', 'EXCENTO');
+INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('001', 'IVA');
 
-INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('000', 'Impuesto Excento', '000', NULL, NULL, 0, FALSE, NULL);
-INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('001', 'Impuesto Estandar', '001', NULL, NULL, 0.10, FALSE, NULL);
+INSERT INTO TAXCUSTCATEGORIES(ID, NAME) VALUES ( '000', 'Clientes No Frecuentes');
+INSERT INTO TAXCUSTCATEGORIES(ID, NAME) VALUES ( '001', 'Clientes Frecuentes');
+
+
+INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('000', 'EXCENTO', '000', NULL, NULL, 0, FALSE, NULL);
+INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('001', 'IVA 8%', '001', '000', NULL, 0.8, FALSE, NULL);
+INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('002', 'IVA 12%', '001', '001', NULL, 0.12, FALSE, NULL);
 
 INSERT INTO LOCATIONS(ID, NAME,ADDRESS) VALUES('0', 'General', NULL);
 
@@ -965,3 +989,32 @@ INSERT INTO POS_PLACES(POS_PLACES_ID, NAME, X, Y, POS_FLOORS_ID) VALUES ('7', 'T
 INSERT INTO POS_PLACES(POS_PLACES_ID, NAME, X, Y, POS_FLOORS_ID) VALUES ('8', 'Table 8', 266, 377, '0');
 INSERT INTO POS_PLACES(POS_PLACES_ID, NAME, X, Y, POS_FLOORS_ID) VALUES ('9', 'Table 9', 399, 377, '0');
 INSERT INTO POS_PLACES(POS_PLACES_ID, NAME, X, Y, POS_FLOORS_ID) VALUES ('10', 'Table 10', 532, 377, '0');
+
+INSERT INTO CUSTOMERS(ID, SEARCHKEY, TAXID, NAME, TAXCATEGORY, CARD, MAXDEBT, ADDRESS, ADDRESS2, POSTAL, CITY, REGION, COUNTRY, FIRSTNAME, LASTNAME, EMAIL, PHONE, PHONE2, FAX, NOTES, VISIBLE, CURDATE, CURDEBT)
+VALUES ('9e9bfb1e-d4e9-4b55-ad17-614bfbc11b52', 'V199023310', 'V199023310', 'Dixon Martinez', '001', NULL, 10000, NULL, NULL,NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', true, NULL, NULL)
+
+INSERT INTO public.products(id, reference, code, codetype, name, pricebuy, pricesell, category, taxcat, attributeset_id, stockcost, stockvolume, image, iscom, isscale, attributes)
+  VALUES('5b6c854e-05cc-4f3b-867e-6232a72cef45', '1234', '1234', NULL, 'Prueba Con IVA', 100, 150, '000', '001', NULL, NULL, NULL, NULL, false, false, NULL);
+INSERT INTO public.products(id, reference, code, codetype, name, pricebuy, pricesell, category, taxcat, attributeset_id, stockcost, stockvolume, image, iscom, isscale, attributes)
+  VALUES('51761c31-a72f-4624-80ba-b6a2af36c6c7', '1235', '1235', NULL, 'Prueba Excento', 120, 250, '000', '000', NULL, NULL, NULL, NULL, false, false, NULL);
+
+
+INSERT INTO public.products_cat(product, catorder)
+  VALUES('5b6c854e-05cc-4f3b-867e-6232a72cef45', NULL);
+INSERT INTO public.products_cat(product, catorder)
+  VALUES('51761c31-a72f-4624-80ba-b6a2af36c6c7', NULL);
+
+INSERT INTO public.stocklevel(id, location, product, stocksecurity, stockmaximum)
+  VALUES('5cea3ef5-e4f2-4d60-8276-7f538839c2a6', '0', '5b6c854e-05cc-4f3b-867e-6232a72cef45', 10, 30);
+INSERT INTO public.stocklevel(id, location, product, stocksecurity, stockmaximum)
+  VALUES('0e88d1ec-21a5-48f2-9371-8a9e378553e5', '0', '51761c31-a72f-4624-80ba-b6a2af36c6c7', 20, 50);
+
+INSERT INTO public.stockdiary(id, datenew, reason, location, product, attributesetinstance_id, units, price)
+  VALUES('5a8b27d4-4656-4c3c-a792-9d81eca77d8d', '2016-08-24 10:12:00.0', 1, '0', '5b6c854e-05cc-4f3b-867e-6232a72cef45', NULL, 30, 100);
+INSERT INTO public.stockdiary(id, datenew, reason, location, product, attributesetinstance_id, units, price)
+  VALUES('03730080-a2a8-4aae-9ab4-7bebf9c2634a', '2016-08-24 10:12:00.0', 1, '0', '51761c31-a72f-4624-80ba-b6a2af36c6c7', NULL, 50, 120);
+
+INSERT INTO public.stockcurrent(location, product, attributesetinstance_id, units)
+  VALUES('0', '5b6c854e-05cc-4f3b-867e-6232a72cef45', NULL, 30);
+INSERT INTO public.stockcurrent(location, product, attributesetinstance_id, units)
+  VALUES('0', '51761c31-a72f-4624-80ba-b6a2af36c6c7', NULL, 50);

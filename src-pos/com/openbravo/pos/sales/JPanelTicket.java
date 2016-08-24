@@ -82,8 +82,11 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 /**
  *
  * @author adrianromero
- * @author Dixon Martinez <a href="dixon.22martinez@gmail.com>
- * 	<li> Duplicity of items to add several times a product
+ * @author Dixon Martinez, dixon.22martinez@gmail.com
+ * 		@see <a href="https://github.com/dixon22ma/Custom-OpenBravo/issues/1">
+ * 				BR [ 1 ] Duplicity of items to add several times a product </a>
+ * 		@see <a href="https://github.com/dixon22ma/Custom-OpenBravo/issues/2">
+ * 				BR [ 2 ] Bug in window customer </a>
  * 
  */
 public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFactoryApp, TicketsEditor {
@@ -1689,7 +1692,8 @@ public abstract class JPanelTicket extends JPanel implements JPanelView, BeanFac
         try {
             m_oTicket.setCustomer(finder.getSelectedCustomer() == null
                     ? null
-                    : dlSales.loadCustomerExt(finder.getSelectedCustomer().getId()));
+               		//	BR [ 2 ]
+                    : dlSales.loadCustomerExt(finder.getSelectedCustomer().getCustomerId()));
         } catch (BasicException e) {
             MessageInf msg = new MessageInf(MessageInf.SGN_WARNING, AppLocal.getIntString("message.cannotfindcustomer"), e);
             msg.show(this);            

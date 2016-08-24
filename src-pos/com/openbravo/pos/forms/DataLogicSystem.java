@@ -69,7 +69,7 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
 
         m_sInitScript = "/com/openbravo/pos/scripts/" + s.DB.getName();
 
-        m_version = new PreparedSentence(s, "SELECT Version FROM POS_Applications  WHERE POS_Applications_ID = ?", SerializerWriteString.INSTANCE, SerializerReadString.INSTANCE);
+        m_version = new PreparedSentence(s, "SELECT Version FROM Applications  WHERE Applications_ID = ?", SerializerWriteString.INSTANCE, SerializerReadString.INSTANCE);
         m_dummy = new StaticSentence(s, "SELECT * FROM PEOPLE WHERE 1 = 0");
          
         final ThumbNailBuilder tnb = new ThumbNailBuilder(32, 32, "com/openbravo/images/yast_sysadmin.png");        
@@ -96,16 +96,16 @@ public class DataLogicSystem extends BeanFactoryDataSingle {
             , peopleread);
          
         m_resourcebytes = new PreparedSentence(s
-            , "SELECT ResourceContent FROM POS_Resources WHERE NAME = ?"
+            , "SELECT ResourceContent FROM Resources WHERE NAME = ?"
             , SerializerWriteString.INSTANCE
             , SerializerReadBytes.INSTANCE);
         
         Datas[] resourcedata = new Datas[] {Datas.STRING, Datas.STRING, Datas.INT, Datas.BYTES};
         m_resourcebytesinsert = new PreparedSentence(s
-                , "INSERT INTO POS_Resources(POS_Resources_ID, NAME, ResourceType, ResourceContent) VALUES (?, ?, ?, ?)"
+                , "INSERT INTO Resources(Resources_ID, NAME, ResourceType, ResourceContent) VALUES (?, ?, ?, ?)"
                 , new SerializerWriteBasic(resourcedata));
         m_resourcebytesupdate = new PreparedSentence(s
-                , "UPDATE POS_Resources SET NAME = ?, ResourceType = ?, ResourceContent = ? WHERE NAME = ?"
+                , "UPDATE Resources SET NAME = ?, ResourceType = ?, ResourceContent = ? WHERE NAME = ?"
                 , new SerializerWriteBasicExt(resourcedata, new int[] {1, 2, 3, 1}));
         
         m_rolepermissions = new PreparedSentence(s

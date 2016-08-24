@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="locales"/>
 	<classpathentry kind="src" path="reports"/>
 	<classpathentry kind="src" path="src-pos"/>
+	<classpathentry kind="src" path="src-data"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OpenBravoPOS_2.30.2"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk8"/>
 	<classpathentry kind="lib" path="lib/substance.jar"/>

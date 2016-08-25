@@ -1,1462 +1,483 @@
-
-/* Drop Indexes */
-
-DROP INDEX IF EXISTS attuse_line;
-DROP INDEX IF EXISTS closedcash_inx_seq;
-DROP INDEX IF EXISTS closedcash_inx_1;
-DROP INDEX IF EXISTS customers_card_inx;
-DROP INDEX IF EXISTS customers_name_inx;
-DROP INDEX IF EXISTS customers_taxid_inx;
-DROP INDEX IF EXISTS payments_inx_1;
-DROP INDEX IF EXISTS people_card_inx;
-DROP INDEX IF EXISTS products_cat_inx_1;
-DROP INDEX IF EXISTS pcom_inx_prod;
-DROP INDEX IF EXISTS receipts_inx_1;
-DROP INDEX IF EXISTS reservations_inx_1;
-DROP INDEX IF EXISTS stockcurrent_inx;
-DROP INDEX IF EXISTS stockdiary_inx_1;
-DROP INDEX IF EXISTS tickets_ticketid;
-
-
-
-/* Drop Tables */
-
-DROP TABLE IF EXISTS public.reservation_customers;
-DROP TABLE IF EXISTS public.ticketlines;
-DROP TABLE IF EXISTS public.tickets;
-DROP TABLE IF EXISTS public.Customers;
-DROP TABLE IF EXISTS City;
-DROP TABLE IF EXISTS Region;
-DROP TABLE IF EXISTS Country;
-DROP TABLE IF EXISTS public.attributeinstance;
-DROP TABLE IF EXISTS public.attributeuse;
-DROP TABLE IF EXISTS public.attributevalue;
-DROP TABLE IF EXISTS public.attribute;
-DROP TABLE IF EXISTS public.stockcurrent;
-DROP TABLE IF EXISTS public.stockdiary;
-DROP TABLE IF EXISTS public.attributesetinstance;
-DROP TABLE IF EXISTS public.products_cat;
-DROP TABLE IF EXISTS public.products_com;
-DROP TABLE IF EXISTS public.stocklevel;
-DROP TABLE IF EXISTS public.products;
-DROP TABLE IF EXISTS public.attributeset;
-DROP TABLE IF EXISTS public.categories;
-DROP TABLE IF EXISTS public.payments;
-DROP TABLE IF EXISTS public.taxlines;
-DROP TABLE IF EXISTS public.receipts;
-DROP TABLE IF EXISTS public.closedcash;
-DROP TABLE IF EXISTS public.locations;
-DROP TABLE IF EXISTS public.people;
-DROP TABLE IF EXISTS public.Applications;
-DROP TABLE IF EXISTS public.PLACES;
-DROP TABLE IF EXISTS public.FLOORS;
-DROP TABLE IF EXISTS public.Resources;
-DROP TABLE IF EXISTS public.reservations;
-DROP TABLE IF EXISTS public.roles;
-DROP TABLE IF EXISTS public.sharedtickets;
-DROP TABLE IF EXISTS public.taxes;
-DROP TABLE IF EXISTS public.taxcategories;
-DROP TABLE IF EXISTS public.taxcustcategories;
-DROP TABLE IF EXISTS public.thirdparties;
-
-
-
-/* Drop Sequences */
-
-DROP SEQUENCE IF EXISTS public.ticketsnum;
-DROP SEQUENCE IF EXISTS public.ticketsnum_payment;
-DROP SEQUENCE IF EXISTS public.ticketsnum_refund;
-
-
-
-
-/* Create Sequences */
-
-CREATE SEQUENCE public.ticketsnum INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;
-CREATE SEQUENCE public.ticketsnum_payment INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;
-CREATE SEQUENCE public.ticketsnum_refund INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;
-
-
-
-/* Create Tables */
-
--- City
-CREATE TABLE City
-(
-	-- City_ID
-	City_ID varchar NOT NULL,
-	-- Country_ID
-	Country_ID varchar NOT NULL,
-	-- Region_ID
-	Region_ID varchar NOT NULL,
-	-- IsActive
-	IsActive char(1),
-	-- Name
-	Name varchar,
-	-- LoCode
-	LoCode varchar(10),
-	-- AreaCode
-	AreaCode varchar(10),
-	PRIMARY KEY (City_ID)
-) WITHOUT OIDS;
-
-
--- Country
-CREATE TABLE Country
-(
-	-- Country_ID
-	Country_ID varchar NOT NULL,
-	-- IsActive
-	IsActive char(1),
-	-- Name
-	Name varchar NOT NULL,
-	-- Description
-	Description varchar(255),
-	-- CountryCode
-	CountryCode char(2),
-	-- IsHasRegion
-	IsHasRegion char(1),
-	-- RegionName
-	RegionName varchar,
-	PRIMARY KEY (Country_ID)
-) WITHOUT OIDS;
-
-
--- Region
-CREATE TABLE Region
-(
-	-- Region_ID
-	Region_ID varchar NOT NULL,
-	-- Country_ID
-	Country_ID varchar NOT NULL,
-	-- IsActive
-	IsActive char(1),
-	-- Name
-	Name varchar,
-	-- Description
-	Description varchar(255),
-	-- IsDefault
-	IsDefault char(1),
-	PRIMARY KEY (Region_ID)
-) WITHOUT OIDS;
-
-
--- attribute
-CREATE TABLE public.attribute
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL,
-	CONSTRAINT attribute_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- attributeinstance
-CREATE TABLE public.attributeinstance
-(
-	-- id
-	id varchar NOT NULL,
-	-- attributesetinstance_id
-	attributesetinstance_id varchar NOT NULL,
-	-- attribute_id
-	attribute_id varchar NOT NULL,
-	-- value
-	value varchar,
-	CONSTRAINT attributeinstance_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- attributeset
-CREATE TABLE public.attributeset
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL,
-	CONSTRAINT attributeset_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- attributesetinstance
-CREATE TABLE public.attributesetinstance
-(
-	-- id
-	id varchar NOT NULL,
-	-- attributeset_id
-	attributeset_id varchar NOT NULL,
-	-- description
-	description varchar,
-	CONSTRAINT attributesetinstance_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- attributeuse
-CREATE TABLE public.attributeuse
-(
-	-- id
-	id varchar NOT NULL,
-	-- attributeset_id
-	attributeset_id varchar NOT NULL,
-	-- attribute_id
-	attribute_id varchar NOT NULL,
-	-- lineno
-	lineno int,
-	CONSTRAINT attributeuse_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- attributevalue
-CREATE TABLE public.attributevalue
-(
-	-- id
-	id varchar NOT NULL,
-	-- attribute_id
-	attribute_id varchar NOT NULL,
-	-- value
-	value varchar,
-	CONSTRAINT attributevalue_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- categories
-CREATE TABLE public.categories
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- parentid
-	parentid varchar,
-	-- Image
-	Image bytea,
-	CONSTRAINT categories_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- closedcash
-CREATE TABLE public.closedcash
-(
-	-- money
-	money varchar NOT NULL,
-	-- host
-	host varchar NOT NULL,
-	-- hostsequence
-	hostsequence int NOT NULL,
-	-- datestart
-	datestart timestamp NOT NULL,
-	-- dateend
-	dateend timestamp,
-	CONSTRAINT closedcash_pkey PRIMARY KEY (money)
-) WITHOUT OIDS;
-
-
--- Customers
-CREATE TABLE public.Customers
-(
-	-- Customers_ID
-	Customers_ID varchar NOT NULL,
-	-- SearchKey
-	SearchKey varchar NOT NULL UNIQUE,
-	-- TaxID
-	TaxID varchar(20),
-	-- Name
-	Name varchar NOT NULL,
-	-- TaxCategory
-	TaxCategory varchar,
-	-- Card
-	Card varchar,
-	-- MaxDebt
-	MaxDebt float DEFAULT 0 NOT NULL,
-	-- Address
-	Address varchar,
-	-- Address2
-	Address2 varchar,
-	-- Postal
-	Postal varchar,
-	-- FirstName
-	FirstName varchar(60),
-	-- LastName
-	LastName varchar(60),
-	-- Email
-	Email varchar,
-	-- Phone
-	Phone varchar,
-	-- Phone2
-	Phone2 varchar,
-	-- Fax
-	Fax varchar,
-	-- Notes
-	Notes varchar,
-	-- IsVisible
-	IsVisible boolean DEFAULT 'true' NOT NULL,
-	-- CurDate
-	CurDate timestamp,
-	-- CurDebt
-	CurDebt float,
-	-- Country_ID
-	Country_ID varchar NOT NULL,
-	-- City_ID
-	City_ID varchar NOT NULL,
-	-- Region_ID
-	Region_ID varchar NOT NULL,
-	-- Processing
-	Processing char(1),
-	CONSTRAINT customers_pkey PRIMARY KEY (Customers_ID)
-) WITHOUT OIDS;
-
-
--- locations
-CREATE TABLE public.locations
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- Address
-	Address varchar,
-	CONSTRAINT locations_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- payments
-CREATE TABLE public.payments
-(
-	-- id
-	id varchar NOT NULL,
-	-- receipt
-	receipt varchar NOT NULL,
-	-- payment
-	payment varchar NOT NULL,
-	-- total
-	total float NOT NULL,
-	-- transid
-	transid varchar,
-	-- returnmsg
-	returnmsg bytea,
-	CONSTRAINT payments_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- people
-CREATE TABLE public.people
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- apppassword
-	apppassword varchar,
-	-- Card
-	Card varchar,
-	-- role
-	role varchar NOT NULL,
-	-- IsVisible
-	IsVisible boolean NOT NULL,
-	-- Image
-	Image bytea,
-	CONSTRAINT people_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- Applications
-CREATE TABLE public.Applications
-(
-	-- Applications_ID
-	Applications_ID varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL,
-	-- Version
-	Version varchar NOT NULL,
-	CONSTRAINT applications_pkey PRIMARY KEY (Applications_ID)
-) WITHOUT OIDS;
-
-
--- FLOORS
-CREATE TABLE public.FLOORS
-(
-	-- FLOORS_ID
-	FLOORS_ID varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- Image
-	Image bytea,
-	CONSTRAINT floors_pkey PRIMARY KEY (FLOORS_ID)
-) WITHOUT OIDS;
-
-
--- PLACES
-CREATE TABLE public.PLACES
-(
-	-- PLACES_ID
-	PLACES_ID varchar NOT NULL,
-	-- FLOORS_ID
-	FLOORS_ID varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- X
-	X int NOT NULL,
-	-- Y
-	Y int NOT NULL,
-	CONSTRAINT places_pkey PRIMARY KEY (PLACES_ID)
-) WITHOUT OIDS;
-
-
--- Resources
-CREATE TABLE public.Resources
-(
-	-- Resources_ID
-	Resources_ID varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- ResourcesType
-	ResourcesType int NOT NULL,
-	-- ResourceContent
-	ResourceContent bytea,
-	CONSTRAINT resources_pkey PRIMARY KEY (Resources_ID)
-) WITHOUT OIDS;
-
-
--- products
-CREATE TABLE public.products
-(
-	-- id
-	id varchar NOT NULL,
-	-- reference
-	reference varchar NOT NULL UNIQUE,
-	-- code
-	code varchar NOT NULL UNIQUE,
-	-- codetype
-	codetype varchar,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- pricebuy
-	pricebuy float NOT NULL,
-	-- pricesell
-	pricesell float NOT NULL,
-	-- category
-	category varchar NOT NULL,
-	-- taxcat
-	taxcat varchar NOT NULL,
-	-- attributeset_id
-	attributeset_id varchar,
-	-- stockcost
-	stockcost float,
-	-- stockvolume
-	stockvolume float,
-	-- Image
-	Image bytea,
-	-- iscom
-	iscom boolean DEFAULT 'false' NOT NULL,
-	-- isscale
-	isscale boolean DEFAULT 'false' NOT NULL,
-	-- attributes
-	attributes bytea,
-	CONSTRAINT products_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- products_cat
-CREATE TABLE public.products_cat
-(
-	-- product
-	product varchar NOT NULL,
-	-- catorder
-	catorder int,
-	CONSTRAINT products_cat_pkey PRIMARY KEY (product)
-) WITHOUT OIDS;
-
-
--- products_com
-CREATE TABLE public.products_com
-(
-	-- id
-	id varchar NOT NULL,
-	-- product
-	product varchar NOT NULL,
-	-- product2
-	product2 varchar NOT NULL,
-	CONSTRAINT products_com_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- receipts
-CREATE TABLE public.receipts
-(
-	-- id
-	id varchar NOT NULL,
-	-- money
-	money varchar NOT NULL,
-	-- datenew
-	datenew timestamp NOT NULL,
-	-- attributes
-	attributes bytea,
-	CONSTRAINT receipts_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- reservations
-CREATE TABLE public.reservations
-(
-	-- id
-	id varchar NOT NULL,
-	-- created
-	created timestamp NOT NULL,
-	-- datenew
-	datenew timestamp DEFAULT '2001-01-01 00:00:00'::timestamp without time zone NOT NULL,
-	-- title
-	title varchar NOT NULL,
-	-- chairs
-	chairs int NOT NULL,
-	-- isdone
-	isdone boolean NOT NULL,
-	-- description
-	description varchar,
-	CONSTRAINT reservations_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- reservation_customers
-CREATE TABLE public.reservation_customers
-(
-	-- id
-	id varchar NOT NULL,
-	-- Customers_ID
-	Customers_ID varchar NOT NULL,
-	CONSTRAINT reservation_customers_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- roles
-CREATE TABLE public.roles
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- permissions
-	permissions bytea,
-	CONSTRAINT roles_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- sharedtickets
-CREATE TABLE public.sharedtickets
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL,
-	-- ResourceContent
-	ResourceContent bytea,
-	CONSTRAINT sharedtickets_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- stockcurrent
-CREATE TABLE public.stockcurrent
-(
-	-- location
-	location varchar NOT NULL,
-	-- product
-	product varchar NOT NULL,
-	-- attributesetinstance_id
-	attributesetinstance_id varchar,
-	-- units
-	units float NOT NULL
-) WITHOUT OIDS;
-
-
--- stockdiary
-CREATE TABLE public.stockdiary
-(
-	-- id
-	id varchar NOT NULL,
-	-- datenew
-	datenew timestamp NOT NULL,
-	-- reason
-	reason int NOT NULL,
-	-- location
-	location varchar NOT NULL,
-	-- product
-	product varchar NOT NULL,
-	-- attributesetinstance_id
-	attributesetinstance_id varchar,
-	-- units
-	units float NOT NULL,
-	-- price
-	price float NOT NULL,
-	CONSTRAINT stockdiary_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- stocklevel
-CREATE TABLE public.stocklevel
-(
-	-- id
-	id varchar NOT NULL,
-	-- location
-	location varchar NOT NULL,
-	-- product
-	product varchar NOT NULL,
-	-- stocksecurity
-	stocksecurity float,
-	-- stockmaximum
-	stockmaximum float,
-	CONSTRAINT stocklevel_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- taxcategories
-CREATE TABLE public.taxcategories
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	CONSTRAINT taxcategories_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- taxcustcategories
-CREATE TABLE public.taxcustcategories
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	CONSTRAINT taxcustcategories_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- taxes
-CREATE TABLE public.taxes
-(
-	-- id
-	id varchar NOT NULL,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- validfrom
-	validfrom timestamp DEFAULT '2001-01-01 00:00:00'::timestamp without time zone NOT NULL,
-	-- category
-	category varchar NOT NULL,
-	-- custcategory
-	custcategory varchar,
-	-- parentid
-	parentid varchar,
-	-- rate
-	rate float NOT NULL,
-	-- ratecascade
-	ratecascade boolean DEFAULT 'false' NOT NULL,
-	-- rateorder
-	rateorder int,
-	CONSTRAINT taxes_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- taxlines
-CREATE TABLE public.taxlines
-(
-	-- id
-	id varchar NOT NULL,
-	-- receipt
-	receipt varchar NOT NULL,
-	-- taxid
-	taxid varchar NOT NULL,
-	-- base
-	base float NOT NULL,
-	-- amount
-	amount float NOT NULL,
-	CONSTRAINT taxlines_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- thirdparties
-CREATE TABLE public.thirdparties
-(
-	-- id
-	id varchar NOT NULL,
-	-- cif
-	cif varchar NOT NULL UNIQUE,
-	-- Name
-	Name varchar NOT NULL UNIQUE,
-	-- Address
-	Address varchar,
-	-- contactcomm
-	contactcomm varchar,
-	-- contactfact
-	contactfact varchar,
-	-- payrule
-	payrule varchar,
-	-- faxnumber
-	faxnumber varchar,
-	-- phonenumber
-	phonenumber varchar,
-	-- mobilenumber
-	mobilenumber varchar,
-	-- Email
-	Email varchar,
-	-- webpage
-	webpage varchar,
-	-- Notes
-	Notes varchar,
-	CONSTRAINT thirdparties_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
--- ticketlines
-CREATE TABLE public.ticketlines
-(
-	-- ticket
-	ticket varchar NOT NULL,
-	-- line
-	line int NOT NULL,
-	-- product
-	product varchar,
-	-- attributesetinstance_id
-	attributesetinstance_id varchar,
-	-- units
-	units float NOT NULL,
-	-- price
-	price float NOT NULL,
-	-- taxid
-	taxid varchar NOT NULL,
-	-- attributes
-	attributes bytea,
-	CONSTRAINT ticketlines_pkey PRIMARY KEY (ticket, line)
-) WITHOUT OIDS;
-
-
--- tickets
-CREATE TABLE public.tickets
-(
-	-- id
-	id varchar NOT NULL,
-	-- tickettype
-	tickettype int DEFAULT 0 NOT NULL,
-	-- ticketid
-	ticketid int NOT NULL,
-	-- person
-	person varchar NOT NULL,
-	-- status
-	status int DEFAULT 0 NOT NULL,
-	-- Customers_ID
-	Customers_ID varchar NOT NULL,
-	CONSTRAINT tickets_pkey PRIMARY KEY (id)
-) WITHOUT OIDS;
-
-
-
-/* Create Foreign Keys */
-
-ALTER TABLE public.Customers
-	ADD FOREIGN KEY (City_ID)
-	REFERENCES City (City_ID)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE City
-	ADD FOREIGN KEY (Country_ID)
-	REFERENCES Country (Country_ID)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE Region
-	ADD FOREIGN KEY (Country_ID)
-	REFERENCES Country (Country_ID)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE public.Customers
-	ADD FOREIGN KEY (Country_ID)
-	REFERENCES Country (Country_ID)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE City
-	ADD FOREIGN KEY (Region_ID)
-	REFERENCES Region (Region_ID)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE public.Customers
-	ADD FOREIGN KEY (Region_ID)
-	REFERENCES Region (Region_ID)
-	ON UPDATE RESTRICT
-	ON DELETE RESTRICT
-;
-
-
-ALTER TABLE public.attributeinstance
-	ADD CONSTRAINT attinst_att FOREIGN KEY (attribute_id)
-	REFERENCES public.attribute (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.attributeuse
-	ADD CONSTRAINT attuse_att FOREIGN KEY (attribute_id)
-	REFERENCES public.attribute (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.attributevalue
-	ADD CONSTRAINT attval_att FOREIGN KEY (attribute_id)
-	REFERENCES public.attribute (id)
-	ON UPDATE NO ACTION
-	ON DELETE CASCADE
-;
-
-
-ALTER TABLE public.attributesetinstance
-	ADD CONSTRAINT attsetinst_set FOREIGN KEY (attributeset_id)
-	REFERENCES public.attributeset (id)
-	ON UPDATE NO ACTION
-	ON DELETE CASCADE
-;
-
-
-ALTER TABLE public.attributeuse
-	ADD CONSTRAINT attuse_set FOREIGN KEY (attributeset_id)
-	REFERENCES public.attributeset (id)
-	ON UPDATE NO ACTION
-	ON DELETE CASCADE
-;
-
-
-ALTER TABLE public.products
-	ADD CONSTRAINT products_attrset_fk FOREIGN KEY (attributeset_id)
-	REFERENCES public.attributeset (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.attributeinstance
-	ADD CONSTRAINT attinst_set FOREIGN KEY (attributesetinstance_id)
-	REFERENCES public.attributesetinstance (id)
-	ON UPDATE NO ACTION
-	ON DELETE CASCADE
-;
-
-
-ALTER TABLE public.stockcurrent
-	ADD CONSTRAINT stockcurrent_attsetinst FOREIGN KEY (attributesetinstance_id)
-	REFERENCES public.attributesetinstance (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.stockdiary
-	ADD CONSTRAINT stockdiary_attsetinst FOREIGN KEY (attributesetinstance_id)
-	REFERENCES public.attributesetinstance (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.ticketlines
-	ADD CONSTRAINT ticketlines_attsetinst FOREIGN KEY (attributesetinstance_id)
-	REFERENCES public.attributesetinstance (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.categories
-	ADD CONSTRAINT categories_fk_1 FOREIGN KEY (parentid)
-	REFERENCES public.categories (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.products
-	ADD CONSTRAINT products_fk_1 FOREIGN KEY (category)
-	REFERENCES public.categories (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.receipts
-	ADD CONSTRAINT receipts_fk_money FOREIGN KEY (money)
-	REFERENCES public.closedcash (money)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.reservation_customers
-	ADD CONSTRAINT res_cust_fk_2 FOREIGN KEY (Customers_ID)
-	REFERENCES public.Customers (Customers_ID)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.tickets
-	ADD CONSTRAINT tickets_customers_fk FOREIGN KEY (Customers_ID)
-	REFERENCES public.Customers (Customers_ID)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.stockcurrent
-	ADD CONSTRAINT stockcurrent_fk_2 FOREIGN KEY (location)
-	REFERENCES public.locations (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.stockdiary
-	ADD CONSTRAINT stockdiary_fk_2 FOREIGN KEY (location)
-	REFERENCES public.locations (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.stocklevel
-	ADD CONSTRAINT stocklevel_location FOREIGN KEY (location)
-	REFERENCES public.locations (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.tickets
-	ADD CONSTRAINT tickets_fk_2 FOREIGN KEY (person)
-	REFERENCES public.people (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.PLACES
-	ADD CONSTRAINT places_fk_1 FOREIGN KEY (FLOORS_ID)
-	REFERENCES public.FLOORS (FLOORS_ID)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.products_cat
-	ADD CONSTRAINT products_cat_fk_1 FOREIGN KEY (product)
-	REFERENCES public.products (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.products_com
-	ADD CONSTRAINT products_com_fk_1 FOREIGN KEY (product)
-	REFERENCES public.products (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.products_com
-	ADD CONSTRAINT products_com_fk_2 FOREIGN KEY (product2)
-	REFERENCES public.products (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.stockcurrent
-	ADD CONSTRAINT stockcurrent_fk_1 FOREIGN KEY (product)
-	REFERENCES public.products (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.stockdiary
-	ADD CONSTRAINT stockdiary_fk_1 FOREIGN KEY (product)
-	REFERENCES public.products (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.stocklevel
-	ADD CONSTRAINT stocklevel_product FOREIGN KEY (product)
-	REFERENCES public.products (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.ticketlines
-	ADD CONSTRAINT ticketlines_fk_2 FOREIGN KEY (product)
-	REFERENCES public.products (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.payments
-	ADD CONSTRAINT payments_fk_receipt FOREIGN KEY (receipt)
-	REFERENCES public.receipts (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.taxlines
-	ADD CONSTRAINT taxlines_receipt FOREIGN KEY (receipt)
-	REFERENCES public.receipts (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.tickets
-	ADD CONSTRAINT tickets_fk_id FOREIGN KEY (id)
-	REFERENCES public.receipts (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.reservation_customers
-	ADD CONSTRAINT res_cust_fk_1 FOREIGN KEY (id)
-	REFERENCES public.reservations (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.people
-	ADD CONSTRAINT people_fk_1 FOREIGN KEY (role)
-	REFERENCES public.roles (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.products
-	ADD CONSTRAINT products_taxcat_fk FOREIGN KEY (taxcat)
-	REFERENCES public.taxcategories (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.taxes
-	ADD CONSTRAINT taxes_cat_fk FOREIGN KEY (category)
-	REFERENCES public.taxcategories (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.Customers
-	ADD CONSTRAINT customers_taxcat FOREIGN KEY (TaxCategory)
-	REFERENCES public.taxcustcategories (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.taxes
-	ADD CONSTRAINT taxes_custcat_fk FOREIGN KEY (custcategory)
-	REFERENCES public.taxcustcategories (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.taxes
-	ADD CONSTRAINT taxes_taxes_fk FOREIGN KEY (parentid)
-	REFERENCES public.taxes (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.taxlines
-	ADD CONSTRAINT taxlines_tax FOREIGN KEY (taxid)
-	REFERENCES public.taxes (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.ticketlines
-	ADD CONSTRAINT ticketlines_fk_3 FOREIGN KEY (taxid)
-	REFERENCES public.taxes (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-ALTER TABLE public.ticketlines
-	ADD CONSTRAINT ticketlines_fk_ticket FOREIGN KEY (ticket)
-	REFERENCES public.tickets (id)
-	ON UPDATE NO ACTION
-	ON DELETE NO ACTION
-;
-
-
-
-/* Create Indexes */
-
-CREATE UNIQUE INDEX attuse_line ON public.attributeuse USING BTREE (attributeset_id, lineno);
-CREATE UNIQUE INDEX closedcash_inx_seq ON public.closedcash USING BTREE (host, hostsequence);
-CREATE INDEX closedcash_inx_1 ON public.closedcash USING BTREE (datestart);
-CREATE INDEX customers_card_inx ON public.Customers USING BTREE (Card);
-CREATE INDEX customers_name_inx ON public.Customers USING BTREE (Name);
-CREATE INDEX customers_taxid_inx ON public.Customers USING BTREE (TaxID);
-CREATE INDEX payments_inx_1 ON public.payments USING BTREE (payment);
-CREATE INDEX people_card_inx ON public.people USING BTREE (Card);
-CREATE INDEX products_cat_inx_1 ON public.products_cat USING BTREE (catorder);
-CREATE UNIQUE INDEX pcom_inx_prod ON public.products_com USING BTREE (product, product2);
-CREATE INDEX receipts_inx_1 ON public.receipts USING BTREE (datenew);
-CREATE INDEX reservations_inx_1 ON public.reservations USING BTREE (datenew);
-CREATE UNIQUE INDEX stockcurrent_inx ON public.stockcurrent USING BTREE (location, product, attributesetinstance_id);
-CREATE INDEX stockdiary_inx_1 ON public.stockdiary USING BTREE (datenew);
-CREATE INDEX tickets_ticketid ON public.tickets USING BTREE (tickettype, ticketid);
-
-
-
-/* Comments */
-
-COMMENT ON TABLE City IS 'City';
-COMMENT ON COLUMN City.City_ID IS 'City_ID';
-COMMENT ON COLUMN City.Country_ID IS 'Country_ID';
-COMMENT ON COLUMN City.Region_ID IS 'Region_ID';
-COMMENT ON COLUMN City.IsActive IS 'IsActive';
-COMMENT ON COLUMN City.Name IS 'Name';
-COMMENT ON COLUMN City.LoCode IS 'LoCode';
-COMMENT ON COLUMN City.AreaCode IS 'AreaCode';
-COMMENT ON TABLE Country IS 'Country';
-COMMENT ON COLUMN Country.Country_ID IS 'Country_ID';
-COMMENT ON COLUMN Country.IsActive IS 'IsActive';
-COMMENT ON COLUMN Country.Name IS 'Name';
-COMMENT ON COLUMN Country.Description IS 'Description';
-COMMENT ON COLUMN Country.CountryCode IS 'CountryCode';
-COMMENT ON COLUMN Country.IsHasRegion IS 'IsHasRegion';
-COMMENT ON COLUMN Country.RegionName IS 'RegionName';
-COMMENT ON TABLE Region IS 'Region';
-COMMENT ON COLUMN Region.Region_ID IS 'Region_ID';
-COMMENT ON COLUMN Region.Country_ID IS 'Country_ID';
-COMMENT ON COLUMN Region.IsActive IS 'IsActive';
-COMMENT ON COLUMN Region.Name IS 'Name';
-COMMENT ON COLUMN Region.Description IS 'Description';
-COMMENT ON COLUMN Region.IsDefault IS 'IsDefault';
-COMMENT ON TABLE public.attribute IS 'attribute';
-COMMENT ON COLUMN public.attribute.id IS 'id';
-COMMENT ON COLUMN public.attribute.Name IS 'Name';
-COMMENT ON TABLE public.attributeinstance IS 'attributeinstance';
-COMMENT ON COLUMN public.attributeinstance.id IS 'id';
-COMMENT ON COLUMN public.attributeinstance.attributesetinstance_id IS 'attributesetinstance_id';
-COMMENT ON COLUMN public.attributeinstance.attribute_id IS 'attribute_id';
-COMMENT ON COLUMN public.attributeinstance.value IS 'value';
-COMMENT ON TABLE public.attributeset IS 'attributeset';
-COMMENT ON COLUMN public.attributeset.id IS 'id';
-COMMENT ON COLUMN public.attributeset.Name IS 'Name';
-COMMENT ON TABLE public.attributesetinstance IS 'attributesetinstance';
-COMMENT ON COLUMN public.attributesetinstance.id IS 'id';
-COMMENT ON COLUMN public.attributesetinstance.attributeset_id IS 'attributeset_id';
-COMMENT ON COLUMN public.attributesetinstance.description IS 'description';
-COMMENT ON TABLE public.attributeuse IS 'attributeuse';
-COMMENT ON COLUMN public.attributeuse.id IS 'id';
-COMMENT ON COLUMN public.attributeuse.attributeset_id IS 'attributeset_id';
-COMMENT ON COLUMN public.attributeuse.attribute_id IS 'attribute_id';
-COMMENT ON COLUMN public.attributeuse.lineno IS 'lineno';
-COMMENT ON TABLE public.attributevalue IS 'attributevalue';
-COMMENT ON COLUMN public.attributevalue.id IS 'id';
-COMMENT ON COLUMN public.attributevalue.attribute_id IS 'attribute_id';
-COMMENT ON COLUMN public.attributevalue.value IS 'value';
-COMMENT ON TABLE public.categories IS 'categories';
-COMMENT ON COLUMN public.categories.id IS 'id';
-COMMENT ON COLUMN public.categories.Name IS 'Name';
-COMMENT ON COLUMN public.categories.parentid IS 'parentid';
-COMMENT ON COLUMN public.categories.Image IS 'Image';
-COMMENT ON TABLE public.closedcash IS 'closedcash';
-COMMENT ON COLUMN public.closedcash.money IS 'money';
-COMMENT ON COLUMN public.closedcash.host IS 'host';
-COMMENT ON COLUMN public.closedcash.hostsequence IS 'hostsequence';
-COMMENT ON COLUMN public.closedcash.datestart IS 'datestart';
-COMMENT ON COLUMN public.closedcash.dateend IS 'dateend';
-COMMENT ON TABLE public.Customers IS 'Customers';
-COMMENT ON COLUMN public.Customers.Customers_ID IS 'Customers_ID';
-COMMENT ON COLUMN public.Customers.SearchKey IS 'SearchKey';
-COMMENT ON COLUMN public.Customers.TaxID IS 'TaxID';
-COMMENT ON COLUMN public.Customers.Name IS 'Name';
-COMMENT ON COLUMN public.Customers.TaxCategory IS 'TaxCategory';
-COMMENT ON COLUMN public.Customers.Card IS 'Card';
-COMMENT ON COLUMN public.Customers.MaxDebt IS 'MaxDebt';
-COMMENT ON COLUMN public.Customers.Address IS 'Address';
-COMMENT ON COLUMN public.Customers.Address2 IS 'Address2';
-COMMENT ON COLUMN public.Customers.Postal IS 'Postal';
-COMMENT ON COLUMN public.Customers.FirstName IS 'FirstName';
-COMMENT ON COLUMN public.Customers.LastName IS 'LastName';
-COMMENT ON COLUMN public.Customers.Email IS 'Email';
-COMMENT ON COLUMN public.Customers.Phone IS 'Phone';
-COMMENT ON COLUMN public.Customers.Phone2 IS 'Phone2';
-COMMENT ON COLUMN public.Customers.Fax IS 'Fax';
-COMMENT ON COLUMN public.Customers.Notes IS 'Notes';
-COMMENT ON COLUMN public.Customers.IsVisible IS 'IsVisible';
-COMMENT ON COLUMN public.Customers.CurDate IS 'CurDate';
-COMMENT ON COLUMN public.Customers.CurDebt IS 'CurDebt';
-COMMENT ON COLUMN public.Customers.Country_ID IS 'Country_ID';
-COMMENT ON COLUMN public.Customers.City_ID IS 'City_ID';
-COMMENT ON COLUMN public.Customers.Region_ID IS 'Region_ID';
-COMMENT ON COLUMN public.Customers.Processing IS 'Processing';
-COMMENT ON TABLE public.locations IS 'locations';
-COMMENT ON COLUMN public.locations.id IS 'id';
-COMMENT ON COLUMN public.locations.Name IS 'Name';
-COMMENT ON COLUMN public.locations.Address IS 'Address';
-COMMENT ON TABLE public.payments IS 'payments';
-COMMENT ON COLUMN public.payments.id IS 'id';
-COMMENT ON COLUMN public.payments.receipt IS 'receipt';
-COMMENT ON COLUMN public.payments.payment IS 'payment';
-COMMENT ON COLUMN public.payments.total IS 'total';
-COMMENT ON COLUMN public.payments.transid IS 'transid';
-COMMENT ON COLUMN public.payments.returnmsg IS 'returnmsg';
-COMMENT ON TABLE public.people IS 'people';
-COMMENT ON COLUMN public.people.id IS 'id';
-COMMENT ON COLUMN public.people.Name IS 'Name';
-COMMENT ON COLUMN public.people.apppassword IS 'apppassword';
-COMMENT ON COLUMN public.people.Card IS 'Card';
-COMMENT ON COLUMN public.people.role IS 'role';
-COMMENT ON COLUMN public.people.IsVisible IS 'IsVisible';
-COMMENT ON COLUMN public.people.Image IS 'Image';
-COMMENT ON TABLE public.Applications IS 'Applications';
-COMMENT ON COLUMN public.Applications.Applications_ID IS 'Applications_ID';
-COMMENT ON COLUMN public.Applications.Name IS 'Name';
-COMMENT ON COLUMN public.Applications.Version IS 'Version';
-COMMENT ON TABLE public.FLOORS IS 'FLOORS';
-COMMENT ON COLUMN public.FLOORS.FLOORS_ID IS 'FLOORS_ID';
-COMMENT ON COLUMN public.FLOORS.Name IS 'Name';
-COMMENT ON COLUMN public.FLOORS.Image IS 'Image';
-COMMENT ON TABLE public.PLACES IS 'PLACES';
-COMMENT ON COLUMN public.PLACES.PLACES_ID IS 'PLACES_ID';
-COMMENT ON COLUMN public.PLACES.FLOORS_ID IS 'FLOORS_ID';
-COMMENT ON COLUMN public.PLACES.Name IS 'Name';
-COMMENT ON COLUMN public.PLACES.X IS 'X';
-COMMENT ON COLUMN public.PLACES.Y IS 'Y';
-COMMENT ON TABLE public.Resources IS 'Resources';
-COMMENT ON COLUMN public.Resources.Resources_ID IS 'Resources_ID';
-COMMENT ON COLUMN public.Resources.Name IS 'Name';
-COMMENT ON COLUMN public.Resources.ResourcesType IS 'ResourcesType';
-COMMENT ON COLUMN public.Resources.ResourceContent IS 'ResourceContent';
-COMMENT ON TABLE public.products IS 'products';
-COMMENT ON COLUMN public.products.id IS 'id';
-COMMENT ON COLUMN public.products.reference IS 'reference';
-COMMENT ON COLUMN public.products.code IS 'code';
-COMMENT ON COLUMN public.products.codetype IS 'codetype';
-COMMENT ON COLUMN public.products.Name IS 'Name';
-COMMENT ON COLUMN public.products.pricebuy IS 'pricebuy';
-COMMENT ON COLUMN public.products.pricesell IS 'pricesell';
-COMMENT ON COLUMN public.products.category IS 'category';
-COMMENT ON COLUMN public.products.taxcat IS 'taxcat';
-COMMENT ON COLUMN public.products.attributeset_id IS 'attributeset_id';
-COMMENT ON COLUMN public.products.stockcost IS 'stockcost';
-COMMENT ON COLUMN public.products.stockvolume IS 'stockvolume';
-COMMENT ON COLUMN public.products.Image IS 'Image';
-COMMENT ON COLUMN public.products.iscom IS 'iscom';
-COMMENT ON COLUMN public.products.isscale IS 'isscale';
-COMMENT ON COLUMN public.products.attributes IS 'attributes';
-COMMENT ON TABLE public.products_cat IS 'products_cat';
-COMMENT ON COLUMN public.products_cat.product IS 'product';
-COMMENT ON COLUMN public.products_cat.catorder IS 'catorder';
-COMMENT ON TABLE public.products_com IS 'products_com';
-COMMENT ON COLUMN public.products_com.id IS 'id';
-COMMENT ON COLUMN public.products_com.product IS 'product';
-COMMENT ON COLUMN public.products_com.product2 IS 'product2';
-COMMENT ON TABLE public.receipts IS 'receipts';
-COMMENT ON COLUMN public.receipts.id IS 'id';
-COMMENT ON COLUMN public.receipts.money IS 'money';
-COMMENT ON COLUMN public.receipts.datenew IS 'datenew';
-COMMENT ON COLUMN public.receipts.attributes IS 'attributes';
-COMMENT ON TABLE public.reservations IS 'reservations';
-COMMENT ON COLUMN public.reservations.id IS 'id';
-COMMENT ON COLUMN public.reservations.created IS 'created';
-COMMENT ON COLUMN public.reservations.datenew IS 'datenew';
-COMMENT ON COLUMN public.reservations.title IS 'title';
-COMMENT ON COLUMN public.reservations.chairs IS 'chairs';
-COMMENT ON COLUMN public.reservations.isdone IS 'isdone';
-COMMENT ON COLUMN public.reservations.description IS 'description';
-COMMENT ON TABLE public.reservation_customers IS 'reservation_customers';
-COMMENT ON COLUMN public.reservation_customers.id IS 'id';
-COMMENT ON COLUMN public.reservation_customers.Customers_ID IS 'Customers_ID';
-COMMENT ON TABLE public.roles IS 'roles';
-COMMENT ON COLUMN public.roles.id IS 'id';
-COMMENT ON COLUMN public.roles.Name IS 'Name';
-COMMENT ON COLUMN public.roles.permissions IS 'permissions';
-COMMENT ON TABLE public.sharedtickets IS 'sharedtickets';
-COMMENT ON COLUMN public.sharedtickets.id IS 'id';
-COMMENT ON COLUMN public.sharedtickets.Name IS 'Name';
-COMMENT ON COLUMN public.sharedtickets.ResourceContent IS 'ResourceContent';
-COMMENT ON TABLE public.stockcurrent IS 'stockcurrent';
-COMMENT ON COLUMN public.stockcurrent.location IS 'location';
-COMMENT ON COLUMN public.stockcurrent.product IS 'product';
-COMMENT ON COLUMN public.stockcurrent.attributesetinstance_id IS 'attributesetinstance_id';
-COMMENT ON COLUMN public.stockcurrent.units IS 'units';
-COMMENT ON TABLE public.stockdiary IS 'stockdiary';
-COMMENT ON COLUMN public.stockdiary.id IS 'id';
-COMMENT ON COLUMN public.stockdiary.datenew IS 'datenew';
-COMMENT ON COLUMN public.stockdiary.reason IS 'reason';
-COMMENT ON COLUMN public.stockdiary.location IS 'location';
-COMMENT ON COLUMN public.stockdiary.product IS 'product';
-COMMENT ON COLUMN public.stockdiary.attributesetinstance_id IS 'attributesetinstance_id';
-COMMENT ON COLUMN public.stockdiary.units IS 'units';
-COMMENT ON COLUMN public.stockdiary.price IS 'price';
-COMMENT ON TABLE public.stocklevel IS 'stocklevel';
-COMMENT ON COLUMN public.stocklevel.id IS 'id';
-COMMENT ON COLUMN public.stocklevel.location IS 'location';
-COMMENT ON COLUMN public.stocklevel.product IS 'product';
-COMMENT ON COLUMN public.stocklevel.stocksecurity IS 'stocksecurity';
-COMMENT ON COLUMN public.stocklevel.stockmaximum IS 'stockmaximum';
-COMMENT ON TABLE public.taxcategories IS 'taxcategories';
-COMMENT ON COLUMN public.taxcategories.id IS 'id';
-COMMENT ON COLUMN public.taxcategories.Name IS 'Name';
-COMMENT ON TABLE public.taxcustcategories IS 'taxcustcategories';
-COMMENT ON COLUMN public.taxcustcategories.id IS 'id';
-COMMENT ON COLUMN public.taxcustcategories.Name IS 'Name';
-COMMENT ON TABLE public.taxes IS 'taxes';
-COMMENT ON COLUMN public.taxes.id IS 'id';
-COMMENT ON COLUMN public.taxes.Name IS 'Name';
-COMMENT ON COLUMN public.taxes.validfrom IS 'validfrom';
-COMMENT ON COLUMN public.taxes.category IS 'category';
-COMMENT ON COLUMN public.taxes.custcategory IS 'custcategory';
-COMMENT ON COLUMN public.taxes.parentid IS 'parentid';
-COMMENT ON COLUMN public.taxes.rate IS 'rate';
-COMMENT ON COLUMN public.taxes.ratecascade IS 'ratecascade';
-COMMENT ON COLUMN public.taxes.rateorder IS 'rateorder';
-COMMENT ON TABLE public.taxlines IS 'taxlines';
-COMMENT ON COLUMN public.taxlines.id IS 'id';
-COMMENT ON COLUMN public.taxlines.receipt IS 'receipt';
-COMMENT ON COLUMN public.taxlines.taxid IS 'taxid';
-COMMENT ON COLUMN public.taxlines.base IS 'base';
-COMMENT ON COLUMN public.taxlines.amount IS 'amount';
-COMMENT ON TABLE public.thirdparties IS 'thirdparties';
-COMMENT ON COLUMN public.thirdparties.id IS 'id';
-COMMENT ON COLUMN public.thirdparties.cif IS 'cif';
-COMMENT ON COLUMN public.thirdparties.Name IS 'Name';
-COMMENT ON COLUMN public.thirdparties.Address IS 'Address';
-COMMENT ON COLUMN public.thirdparties.contactcomm IS 'contactcomm';
-COMMENT ON COLUMN public.thirdparties.contactfact IS 'contactfact';
-COMMENT ON COLUMN public.thirdparties.payrule IS 'payrule';
-COMMENT ON COLUMN public.thirdparties.faxnumber IS 'faxnumber';
-COMMENT ON COLUMN public.thirdparties.phonenumber IS 'phonenumber';
-COMMENT ON COLUMN public.thirdparties.mobilenumber IS 'mobilenumber';
-COMMENT ON COLUMN public.thirdparties.Email IS 'Email';
-COMMENT ON COLUMN public.thirdparties.webpage IS 'webpage';
-COMMENT ON COLUMN public.thirdparties.Notes IS 'Notes';
-COMMENT ON TABLE public.ticketlines IS 'ticketlines';
-COMMENT ON COLUMN public.ticketlines.ticket IS 'ticket';
-COMMENT ON COLUMN public.ticketlines.line IS 'line';
-COMMENT ON COLUMN public.ticketlines.product IS 'product';
-COMMENT ON COLUMN public.ticketlines.attributesetinstance_id IS 'attributesetinstance_id';
-COMMENT ON COLUMN public.ticketlines.units IS 'units';
-COMMENT ON COLUMN public.ticketlines.price IS 'price';
-COMMENT ON COLUMN public.ticketlines.taxid IS 'taxid';
-COMMENT ON COLUMN public.ticketlines.attributes IS 'attributes';
-COMMENT ON TABLE public.tickets IS 'tickets';
-COMMENT ON COLUMN public.tickets.id IS 'id';
-COMMENT ON COLUMN public.tickets.tickettype IS 'tickettype';
-COMMENT ON COLUMN public.tickets.ticketid IS 'ticketid';
-COMMENT ON COLUMN public.tickets.person IS 'person';
-COMMENT ON COLUMN public.tickets.status IS 'status';
-COMMENT ON COLUMN public.tickets.Customers_ID IS 'Customers_ID';
-
-
-
-INSERT INTO Applications (Applications_ID, NAME, VERSION) VALUES($APP_ID{}, $APP_NAME{}, $APP_VERSION{});
-
+--    Openbravo POS is a point of sales application designed for touch screens.
+--    Copyright (C) 2007-2010 Openbravo, S.L.
+--    http://sourceforge.net/projects/openbravopos
+--
+--    This file is part of Openbravo POS.
+--
+--    Openbravo POS is free software: you can redistribute it and/or modify
+--    it under the terms of the GNU General Public License as published by
+--    the Free Software Foundation, either version 3 of the License, or
+--    (at your option) any later version.
+--
+--    Openbravo POS is distributed in the hope that it will be useful,
+--    but WITHOUT ANY WARRANTY; without even the implied warranty of
+--    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--    GNU General Public License for more details.
+--
+--    You should have received a copy of the GNU General Public License
+--    along with Openbravo POS.  If not, see <http://www.gnu.org/licenses/>.
+
+-- Database initial script for POSTGRESQL
+-- v2.30.2
+
+CREATE TABLE APPLICATIONS (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    VERSION VARCHAR NOT NULL,
+    PRIMARY KEY (ID)
+);
+INSERT INTO APPLICATIONS(ID, NAME, VERSION) VALUES($APP_ID{}, $APP_NAME{}, $APP_VERSION{});
+
+CREATE TABLE ROLES (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    PERMISSIONS BYTEA,
+    PRIMARY KEY (ID)
+);
+CREATE UNIQUE INDEX ROLES_NAME_INX ON ROLES(NAME);
 INSERT INTO ROLES(ID, NAME, PERMISSIONS) VALUES('0', 'Rol Administrador', $FILE{/com/openbravo/pos/templates/Role.Administrator.xml} );
 INSERT INTO ROLES(ID, NAME, PERMISSIONS) VALUES('1', 'Rol Encargado', $FILE{/com/openbravo/pos/templates/Role.Manager.xml} );
 INSERT INTO ROLES(ID, NAME, PERMISSIONS) VALUES('2', 'Rol Empleado', $FILE{/com/openbravo/pos/templates/Role.Employee.xml} );
 INSERT INTO ROLES(ID, NAME, PERMISSIONS) VALUES('3', 'Rol Invitado', $FILE{/com/openbravo/pos/templates/Role.Guest.xml} );
 
+CREATE TABLE PEOPLE (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    APPPASSWORD VARCHAR,
+    CARD VARCHAR,
+    ROLE VARCHAR NOT NULL,
+    VISIBLE BOOLEAN NOT NULL,
+    IMAGE BYTEA,
+    PRIMARY KEY (ID),
+    CONSTRAINT PEOPLE_FK_1 FOREIGN KEY (ROLE) REFERENCES ROLES(ID)
+);
+CREATE UNIQUE INDEX PEOPLE_NAME_INX ON PEOPLE(NAME);
+CREATE INDEX PEOPLE_CARD_INX ON PEOPLE(CARD);
 
-INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, ISVISIBLE, IMAGE) VALUES ('0', 'Administrador', NULL, '0', TRUE, NULL);
-INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, ISVISIBLE, IMAGE) VALUES ('1', 'Encargado', NULL, '1', TRUE, NULL);
-INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, ISVISIBLE, IMAGE) VALUES ('2', 'Empleado', NULL, '2', TRUE, NULL);
-INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, ISVISIBLE, IMAGE) VALUES ('3', 'Invitado', NULL, '3', TRUE, NULL);
+INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, VISIBLE, IMAGE) VALUES ('0', 'Administrador', NULL, '0', TRUE, NULL);
+INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, VISIBLE, IMAGE) VALUES ('1', 'Encargado', NULL, '1', TRUE, NULL);
+INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, VISIBLE, IMAGE) VALUES ('2', 'Empleado', NULL, '2', TRUE, NULL);
+INSERT INTO PEOPLE(ID, NAME, APPPASSWORD, ROLE, VISIBLE, IMAGE) VALUES ('3', 'Invitado', NULL, '3', TRUE, NULL);
 
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('0', 'Printer.Start', 0, $FILE{/com/openbravo/pos/templates/Printer.Start.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('1', 'Printer.Ticket', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('2', 'Printer.Ticket2', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket2.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('3', 'Printer.TicketPreview', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketPreview.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('4', 'Printer.TicketTotal', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketTotal.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('5', 'Printer.OpenDrawer', 0, $FILE{/com/openbravo/pos/templates/Printer.OpenDrawer.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('6', 'Printer.Ticket.Logo', 1, $FILE{/com/openbravo/pos/templates/Printer.Ticket.Logo.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('7', 'Printer.TicketLine', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketLine.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('8', 'Printer.CloseCash', 0, $FILE{/com/openbravo/pos/templates/Printer.CloseCash.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('9', 'Window.Logo', 1, $FILE{/com/openbravo/pos/templates/Window.Logo.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('10', 'Window.Title', 0, $FILE{/com/openbravo/pos/templates/Window.Title.txt});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('11', 'Ticket.Buttons', 0, $FILE{/com/openbravo/pos/templates/Ticket.Buttons.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('12', 'Ticket.Line', 0, $FILE{/com/openbravo/pos/templates/Ticket.Line.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('13', 'Printer.Inventory', 0, $FILE{/com/openbravo/pos/templates/Printer.Inventory.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('14', 'Menu.Root', 0, $FILE{/com/openbravo/pos/templates/Menu.Root.txt});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('15', 'Printer.CustomerPaid', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('16', 'Printer.CustomerPaid2', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid2.xml});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('17', 'payment.cash_lve', 0, $FILE{/com/openbravo/pos/templates/payment.cash_lve.txt});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('18', 'money.100BsF', 1, $FILE{/com/openbravo/pos/templates/money.100BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('19', 'money.10BsF', 1, $FILE{/com/openbravo/pos/templates/money.10BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('20', 'money.20BsF', 1, $FILE{/com/openbravo/pos/templates/money.20BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('21', 'money.2BsF', 1, $FILE{/com/openbravo/pos/templates/money.2BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('22', 'money.50BsF', 1, $FILE{/com/openbravo/pos/templates/money.50BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('23', 'money.5BsF', 1, $FILE{/com/openbravo/pos/templates/money.5BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('24', 'coin.0,01BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,01BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('25', 'coin.0,05BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,05BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('26', 'coin.0,10BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,10BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('27', 'coin.0,125BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,125BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('28', 'coin.0,25BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,25BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('29', 'coin.0,5BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,5BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('30', 'coin.1BsF', 1, $FILE{/com/openbravo/pos/templates/coin.1BsF.png});
-INSERT INTO Resources(Resources_ID, Name, ResourcesType, ResourceContent) VALUES('32', 'Printer.PartialCash', 0, $FILE{/com/openbravo/pos/templates/Printer.PartialCash.xml});
+CREATE TABLE RESOURCES (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    RESTYPE INTEGER NOT NULL,
+    CONTENT BYTEA,
+    PRIMARY KEY (ID)
+);
+CREATE UNIQUE INDEX RESOURCES_NAME_INX ON RESOURCES(NAME);
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('0', 'Printer.Start', 0, $FILE{/com/openbravo/pos/templates/Printer.Start.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('1', 'Printer.Ticket', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('2', 'Printer.Ticket2', 0, $FILE{/com/openbravo/pos/templates/Printer.Ticket2.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('3', 'Printer.TicketPreview', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketPreview.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('4', 'Printer.TicketTotal', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketTotal.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('5', 'Printer.OpenDrawer', 0, $FILE{/com/openbravo/pos/templates/Printer.OpenDrawer.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('6', 'Printer.Ticket.Logo', 1, $FILE{/com/openbravo/pos/templates/Printer.Ticket.Logo.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('7', 'Printer.TicketLine', 0, $FILE{/com/openbravo/pos/templates/Printer.TicketLine.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('8', 'Printer.CloseCash', 0, $FILE{/com/openbravo/pos/templates/Printer.CloseCash.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('9', 'Window.Logo', 1, $FILE{/com/openbravo/pos/templates/Window.Logo.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('10', 'Window.Title', 0, $FILE{/com/openbravo/pos/templates/Window.Title.txt});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('11', 'Ticket.Buttons', 0, $FILE{/com/openbravo/pos/templates/Ticket.Buttons.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('12', 'Ticket.Line', 0, $FILE{/com/openbravo/pos/templates/Ticket.Line.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('13', 'Printer.Inventory', 0, $FILE{/com/openbravo/pos/templates/Printer.Inventory.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('14', 'Menu.Root', 0, $FILE{/com/openbravo/pos/templates/Menu.Root.txt});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('15', 'Printer.CustomerPaid', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('16', 'Printer.CustomerPaid2', 0, $FILE{/com/openbravo/pos/templates/Printer.CustomerPaid2.xml});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('17', 'payment.cash_lve', 0, $FILE{/com/openbravo/pos/templates/payment.cash_lve.txt});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('18', 'money.100BsF', 1, $FILE{/com/openbravo/pos/templates/money.100BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('19', 'money.10BsF', 1, $FILE{/com/openbravo/pos/templates/money.10BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('20', 'money.20BsF', 1, $FILE{/com/openbravo/pos/templates/money.20BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('21', 'money.2BsF', 1, $FILE{/com/openbravo/pos/templates/money.2BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('22', 'money.50BsF', 1, $FILE{/com/openbravo/pos/templates/money.50BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('23', 'money.5BsF', 1, $FILE{/com/openbravo/pos/templates/money.5BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('24', 'coin.0,01BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,01BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('25', 'coin.0,05BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,05BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('26', 'coin.0,10BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,10BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('27', 'coin.0,125BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,125BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('28', 'coin.0,25BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,25BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('29', 'coin.0,5BsF', 1, $FILE{/com/openbravo/pos/templates/coin.0,5BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('30', 'coin.1BsF', 1, $FILE{/com/openbravo/pos/templates/coin.1BsF.png});
+INSERT INTO RESOURCES(ID, NAME, RESTYPE, CONTENT) VALUES('32', 'Printer.PartialCash', 0, $FILE{/com/openbravo/pos/templates/Printer.PartialCash.xml});
 
-INSERT INTO CATEGORIES(ID, NAME) VALUES ('000', 'Estandar');
 
-INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('000', 'EXCENTO');
-INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('001', 'IVA');
 
+CREATE TABLE TAXCUSTCATEGORIES (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    PRIMARY KEY (ID)
+);
+CREATE UNIQUE INDEX TAXCUSTCAT_NAME_INX ON TAXCUSTCATEGORIES(NAME);
 INSERT INTO TAXCUSTCATEGORIES(ID, NAME) VALUES ( '000', 'Clientes No Frecuentes');
 INSERT INTO TAXCUSTCATEGORIES(ID, NAME) VALUES ( '001', 'Clientes Frecuentes');
 
 
-INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('000', 'EXCENTO', '000', NULL, NULL, 0, FALSE, NULL);
-INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('001', 'IVA 8%', '001', '000', NULL, 0.08, FALSE, NULL);
-INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('002', 'IVA 12%', '001', '001', NULL, 0.12, FALSE, NULL);
+CREATE TABLE CUSTOMERS (
+    ID VARCHAR NOT NULL,
+    SEARCHKEY VARCHAR NOT NULL,
+    TAXID VARCHAR,
+    NAME VARCHAR NOT NULL,
+    TAXCATEGORY VARCHAR,
+    CARD VARCHAR,
+    MAXDEBT DOUBLE PRECISION DEFAULT 0 NOT NULL,
+    ADDRESS VARCHAR,
+    ADDRESS2 VARCHAR,
+    POSTAL VARCHAR,
+    CITY VARCHAR,
+    REGION VARCHAR,
+    COUNTRY VARCHAR,
+    FIRSTNAME VARCHAR,
+    LASTNAME VARCHAR,
+    EMAIL VARCHAR,
+    PHONE VARCHAR,
+    PHONE2 VARCHAR,
+    FAX VARCHAR,
+    NOTES VARCHAR,
+    VISIBLE BOOLEAN NOT NULL DEFAULT TRUE,
+    CURDATE TIMESTAMP,
+    CURDEBT DOUBLE PRECISION,
+    PRIMARY KEY (ID),
+    CONSTRAINT CUSTOMERS_TAXCAT FOREIGN KEY (TAXCATEGORY) REFERENCES TAXCUSTCATEGORIES(ID)
+);
+CREATE UNIQUE INDEX CUSTOMERS_SKEY_INX ON CUSTOMERS(SEARCHKEY);
+CREATE INDEX CUSTOMERS_TAXID_INX ON CUSTOMERS(TAXID);
+CREATE INDEX CUSTOMERS_NAME_INX ON CUSTOMERS(NAME);
+CREATE INDEX CUSTOMERS_CARD_INX ON CUSTOMERS(CARD);
 
+CREATE TABLE CATEGORIES (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    PARENTID VARCHAR,
+    IMAGE BYTEA,
+    PRIMARY KEY(ID),
+    CONSTRAINT CATEGORIES_FK_1 FOREIGN KEY (PARENTID) REFERENCES CATEGORIES(ID)
+);
+CREATE UNIQUE INDEX CATEGORIES_NAME_INX ON CATEGORIES(NAME);
+INSERT INTO CATEGORIES(ID, NAME) VALUES ('000', 'ESTANDAR');
+
+CREATE TABLE TAXCATEGORIES (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    PRIMARY KEY (ID)
+);
+CREATE UNIQUE INDEX TAXCAT_NAME_INX ON TAXCATEGORIES(NAME);
+INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('000', 'EXCENTO');
+INSERT INTO TAXCATEGORIES(ID, NAME) VALUES ('001', 'IVA');
+
+CREATE TABLE TAXES (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    VALIDFROM TIMESTAMP DEFAULT '2001-01-01 00:00:00' NOT NULL,
+    CATEGORY VARCHAR NOT NULL,
+    CUSTCATEGORY VARCHAR,
+    PARENTID VARCHAR,
+    RATE DOUBLE PRECISION NOT NULL,
+    RATECASCADE BOOLEAN NOT NULL DEFAULT FALSE,
+    RATEORDER INTEGER,
+    PRIMARY KEY(ID),
+    CONSTRAINT TAXES_CAT_FK FOREIGN KEY (CATEGORY) REFERENCES TAXCATEGORIES(ID),
+    CONSTRAINT TAXES_CUSTCAT_FK FOREIGN KEY (CUSTCATEGORY) REFERENCES TAXCUSTCATEGORIES(ID),
+    CONSTRAINT TAXES_TAXES_FK FOREIGN KEY (PARENTID) REFERENCES TAXES(ID)
+);
+CREATE UNIQUE INDEX TAXES_NAME_INX ON TAXES(NAME);
+INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('000', 'EXCENTO', '000', '000', NULL, 0, FALSE, NULL);
+INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('001', 'IVA 12%', '001', '001', NULL, 0.12, FALSE, NULL);
+INSERT INTO TAXES(ID, NAME, CATEGORY, CUSTCATEGORY, PARENTID, RATE, RATECASCADE, RATEORDER) VALUES ('002', 'IVA 8%', '001', '001', NULL, 0.8, FALSE, NULL);
+
+CREATE TABLE ATTRIBUTE (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE ATTRIBUTEVALUE (
+    ID VARCHAR NOT NULL,
+    ATTRIBUTE_ID VARCHAR NOT NULL,
+    VALUE VARCHAR,
+    PRIMARY KEY (ID),
+    CONSTRAINT ATTVAL_ATT FOREIGN KEY (ATTRIBUTE_ID) REFERENCES ATTRIBUTE(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE ATTRIBUTESET (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE ATTRIBUTEUSE (
+    ID VARCHAR NOT NULL,
+    ATTRIBUTESET_ID VARCHAR NOT NULL,
+    ATTRIBUTE_ID VARCHAR NOT NULL,
+    LINENO INTEGER,
+    PRIMARY KEY (ID),
+    CONSTRAINT ATTUSE_SET FOREIGN KEY (ATTRIBUTESET_ID) REFERENCES ATTRIBUTESET(ID) ON DELETE CASCADE,
+    CONSTRAINT ATTUSE_ATT FOREIGN KEY (ATTRIBUTE_ID) REFERENCES ATTRIBUTE(ID)
+);
+CREATE UNIQUE INDEX ATTUSE_LINE ON ATTRIBUTEUSE(ATTRIBUTESET_ID, LINENO);
+
+CREATE TABLE ATTRIBUTESETINSTANCE (
+    ID VARCHAR NOT NULL,
+    ATTRIBUTESET_ID VARCHAR NOT NULL,
+    DESCRIPTION VARCHAR,
+    PRIMARY KEY (ID),
+    CONSTRAINT ATTSETINST_SET FOREIGN KEY (ATTRIBUTESET_ID) REFERENCES ATTRIBUTESET(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE ATTRIBUTEINSTANCE (
+    ID VARCHAR NOT NULL,
+    ATTRIBUTESETINSTANCE_ID VARCHAR NOT NULL,
+    ATTRIBUTE_ID VARCHAR NOT NULL,
+    VALUE VARCHAR,
+    PRIMARY KEY (ID),
+    CONSTRAINT ATTINST_SET FOREIGN KEY (ATTRIBUTESETINSTANCE_ID) REFERENCES ATTRIBUTESETINSTANCE(ID) ON DELETE CASCADE,
+    CONSTRAINT ATTINST_ATT FOREIGN KEY (ATTRIBUTE_ID) REFERENCES ATTRIBUTE(ID)
+);
+
+CREATE TABLE PRODUCTS (
+    ID VARCHAR NOT NULL,
+    REFERENCE VARCHAR NOT NULL,
+    CODE VARCHAR NOT NULL,
+    CODETYPE VARCHAR,
+    NAME VARCHAR NOT NULL,
+    PRICEBUY DOUBLE PRECISION NOT NULL,
+    PRICESELL DOUBLE PRECISION NOT NULL,
+    CATEGORY VARCHAR NOT NULL,
+    TAXCAT VARCHAR NOT NULL,
+    ATTRIBUTESET_ID VARCHAR,
+    STOCKCOST DOUBLE PRECISION,
+    STOCKVOLUME DOUBLE PRECISION,
+    IMAGE BYTEA,
+    ISCOM BOOLEAN NOT NULL DEFAULT FALSE,
+    ISSCALE BOOLEAN NOT NULL DEFAULT FALSE,
+    ATTRIBUTES BYTEA,
+    PRIMARY KEY (ID),
+    CONSTRAINT PRODUCTS_FK_1 FOREIGN KEY (CATEGORY) REFERENCES CATEGORIES(ID),
+    CONSTRAINT PRODUCTS_TAXCAT_FK FOREIGN KEY (TAXCAT) REFERENCES TAXCATEGORIES(ID),
+    CONSTRAINT PRODUCTS_ATTRSET_FK FOREIGN KEY (ATTRIBUTESET_ID) REFERENCES ATTRIBUTESET(ID)
+);
+CREATE UNIQUE INDEX PRODUCTS_INX_0 ON PRODUCTS(REFERENCE);
+CREATE UNIQUE INDEX PRODUCTS_INX_1 ON PRODUCTS(CODE);
+CREATE UNIQUE INDEX PRODUCTS_NAME_INX ON PRODUCTS(NAME);
+
+CREATE TABLE PRODUCTS_CAT (
+    PRODUCT VARCHAR NOT NULL,
+    CATORDER INTEGER,
+    PRIMARY KEY (PRODUCT),
+    CONSTRAINT PRODUCTS_CAT_FK_1 FOREIGN KEY (PRODUCT) REFERENCES PRODUCTS(ID)
+);
+CREATE INDEX PRODUCTS_CAT_INX_1 ON PRODUCTS_CAT(CATORDER);
+
+CREATE TABLE PRODUCTS_COM (
+    ID VARCHAR NOT NULL,
+    PRODUCT VARCHAR NOT NULL,
+    PRODUCT2 VARCHAR NOT NULL,
+    PRIMARY KEY (ID),
+    CONSTRAINT PRODUCTS_COM_FK_1 FOREIGN KEY (PRODUCT) REFERENCES PRODUCTS(ID),
+    CONSTRAINT PRODUCTS_COM_FK_2 FOREIGN KEY (PRODUCT2) REFERENCES PRODUCTS(ID)
+);
+CREATE UNIQUE INDEX PCOM_INX_PROD ON PRODUCTS_COM(PRODUCT, PRODUCT2);
+
+CREATE TABLE LOCATIONS (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    ADDRESS VARCHAR,
+    PRIMARY KEY (ID)
+);
+CREATE UNIQUE INDEX LOCATIONS_NAME_INX ON LOCATIONS(NAME);
 INSERT INTO LOCATIONS(ID, NAME,ADDRESS) VALUES('0', 'General', NULL);
 
-INSERT INTO FLOORS(FLOORS_ID, NAME, IMAGE) VALUES ('0', 'Restaurant floor', $FILE{/com/openbravo/pos/templates/restaurantsample.png});
+CREATE TABLE STOCKDIARY (
+    ID VARCHAR NOT NULL,
+    DATENEW TIMESTAMP NOT NULL,
+    REASON INTEGER NOT NULL,
+    LOCATION VARCHAR NOT NULL,
+    PRODUCT VARCHAR NOT NULL,
+    ATTRIBUTESETINSTANCE_ID VARCHAR,
+    UNITS DOUBLE PRECISION NOT NULL,
+    PRICE DOUBLE PRECISION NOT NULL,
+    PRIMARY KEY (ID),
+    CONSTRAINT STOCKDIARY_FK_1 FOREIGN KEY (PRODUCT) REFERENCES PRODUCTS(ID),
+    CONSTRAINT STOCKDIARY_ATTSETINST FOREIGN KEY (ATTRIBUTESETINSTANCE_ID) REFERENCES ATTRIBUTESETINSTANCE(ID),
+    CONSTRAINT STOCKDIARY_FK_2 FOREIGN KEY (LOCATION) REFERENCES LOCATIONS(ID)
+);
+CREATE INDEX STOCKDIARY_INX_1 ON STOCKDIARY(DATENEW);
 
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('1', 'Table 1', 133, 151, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('2', 'Table 2', 532, 151, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('3', 'Table 3', 133, 264, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('4', 'Table 4', 266, 264, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('5', 'Table 5', 399, 264, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('6', 'Table 6', 532, 264, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('7', 'Table 7', 133, 377, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('8', 'Table 8', 266, 377, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('9', 'Table 9', 399, 377, '0');
-INSERT INTO PLACES(PLACES_ID, NAME, X, Y, FLOORS_ID) VALUES ('10', 'Table 10', 532, 377, '0');
+CREATE TABLE STOCKLEVEL (
+    ID VARCHAR NOT NULL,
+    LOCATION VARCHAR NOT NULL,
+    PRODUCT VARCHAR NOT NULL,
+    STOCKSECURITY DOUBLE PRECISION,
+    STOCKMAXIMUM DOUBLE PRECISION,
+    PRIMARY KEY (ID),
+    CONSTRAINT STOCKLEVEL_PRODUCT FOREIGN KEY (PRODUCT) REFERENCES PRODUCTS(ID),
+    CONSTRAINT STOCKLEVEL_LOCATION FOREIGN KEY (LOCATION) REFERENCES LOCATIONS(ID)
+);
+
+CREATE TABLE STOCKCURRENT (
+    LOCATION VARCHAR NOT NULL,
+    PRODUCT VARCHAR NOT NULL,
+    ATTRIBUTESETINSTANCE_ID VARCHAR,
+    UNITS DOUBLE PRECISION NOT NULL,
+    CONSTRAINT STOCKCURRENT_FK_1 FOREIGN KEY (PRODUCT) REFERENCES PRODUCTS(ID),
+    CONSTRAINT STOCKCURRENT_ATTSETINST FOREIGN KEY (ATTRIBUTESETINSTANCE_ID) REFERENCES ATTRIBUTESETINSTANCE(ID),
+    CONSTRAINT STOCKCURRENT_FK_2 FOREIGN KEY (LOCATION) REFERENCES LOCATIONS(ID)
+);
+CREATE UNIQUE INDEX STOCKCURRENT_INX ON STOCKCURRENT(LOCATION, PRODUCT, ATTRIBUTESETINSTANCE_ID);
+
+CREATE TABLE CLOSEDCASH (
+    MONEY VARCHAR NOT NULL,
+    HOST VARCHAR NOT NULL,
+    HOSTSEQUENCE INTEGER NOT NULL,
+    DATESTART TIMESTAMP NOT NULL,
+    DATEEND TIMESTAMP,
+    PRIMARY KEY(MONEY)
+);
+CREATE INDEX CLOSEDCASH_INX_1 ON CLOSEDCASH(DATESTART);
+CREATE UNIQUE INDEX CLOSEDCASH_INX_SEQ ON CLOSEDCASH(HOST, HOSTSEQUENCE);
+
+CREATE TABLE RECEIPTS (
+    ID VARCHAR NOT NULL,
+    MONEY VARCHAR NOT NULL,
+    DATENEW TIMESTAMP NOT NULL,
+    ATTRIBUTES BYTEA,
+    PRIMARY KEY(ID),
+    CONSTRAINT RECEIPTS_FK_MONEY FOREIGN KEY (MONEY) REFERENCES CLOSEDCASH(MONEY)
+);
+CREATE INDEX RECEIPTS_INX_1 ON RECEIPTS(DATENEW);
+
+CREATE TABLE TICKETS (
+    ID VARCHAR NOT NULL,
+    TICKETTYPE INTEGER DEFAULT 0 NOT NULL,
+    TICKETID INTEGER NOT NULL,
+    PERSON VARCHAR NOT NULL,
+    CUSTOMER VARCHAR,
+    STATUS INTEGER DEFAULT 0 NOT NULL,
+    PRIMARY KEY (ID),
+    CONSTRAINT TICKETS_FK_ID FOREIGN KEY (ID) REFERENCES RECEIPTS(ID),
+    CONSTRAINT TICKETS_FK_2 FOREIGN KEY (PERSON) REFERENCES PEOPLE(ID),
+    CONSTRAINT TICKETS_CUSTOMERS_FK FOREIGN KEY (CUSTOMER) REFERENCES CUSTOMERS(ID)
+);
+CREATE INDEX TICKETS_TICKETID ON TICKETS(TICKETTYPE, TICKETID);
+
+CREATE SEQUENCE TICKETSNUM START WITH 1;
+CREATE SEQUENCE TICKETSNUM_REFUND START WITH 1;
+CREATE SEQUENCE TICKETSNUM_PAYMENT START WITH 1;
+
+CREATE TABLE TICKETLINES (
+    TICKET VARCHAR NOT NULL,
+    LINE INTEGER NOT NULL,
+    PRODUCT VARCHAR,
+    ATTRIBUTESETINSTANCE_ID VARCHAR,
+    UNITS DOUBLE PRECISION NOT NULL,
+    PRICE DOUBLE PRECISION NOT NULL,
+    TAXID VARCHAR NOT NULL,
+    ATTRIBUTES BYTEA,
+    PRIMARY KEY (TICKET, LINE),
+    CONSTRAINT TICKETLINES_FK_TICKET FOREIGN KEY (TICKET) REFERENCES TICKETS(ID),
+    CONSTRAINT TICKETLINES_FK_2 FOREIGN KEY (PRODUCT) REFERENCES PRODUCTS(ID),
+    CONSTRAINT TICKETLINES_ATTSETINST FOREIGN KEY (ATTRIBUTESETINSTANCE_ID) REFERENCES ATTRIBUTESETINSTANCE(ID),
+    CONSTRAINT TICKETLINES_FK_3 FOREIGN KEY (TAXID) REFERENCES TAXES(ID)
+);
+
+CREATE TABLE PAYMENTS (
+    ID VARCHAR NOT NULL,
+    RECEIPT VARCHAR NOT NULL,
+    PAYMENT VARCHAR NOT NULL,
+    TOTAL DOUBLE PRECISION NOT NULL,
+    TRANSID VARCHAR,
+    RETURNMSG BYTEA,
+    PRIMARY KEY (ID),
+    CONSTRAINT PAYMENTS_FK_RECEIPT FOREIGN KEY (RECEIPT) REFERENCES RECEIPTS(ID)
+);
+CREATE INDEX PAYMENTS_INX_1 ON PAYMENTS(PAYMENT);
+
+CREATE TABLE TAXLINES (
+    ID VARCHAR NOT NULL,
+    RECEIPT VARCHAR NOT NULL,
+    TAXID VARCHAR NOT NULL, 
+    BASE DOUBLE PRECISION NOT NULL, 
+    AMOUNT DOUBLE PRECISION NOT NULL,
+    PRIMARY KEY (ID),
+    CONSTRAINT TAXLINES_TAX FOREIGN KEY (TAXID) REFERENCES TAXES(ID),
+    CONSTRAINT TAXLINES_RECEIPT FOREIGN KEY (RECEIPT) REFERENCES RECEIPTS(ID)
+);
+
+CREATE TABLE FLOORS (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    IMAGE BYTEA,
+    PRIMARY KEY (ID)
+);
+CREATE UNIQUE INDEX FLOORS_NAME_INX ON FLOORS(NAME);
+INSERT INTO FLOORS(ID, NAME, IMAGE) VALUES ('0', 'Planta del restaurante', $FILE{/com/openbravo/pos/templates/restaurantsample.png});
+
+CREATE TABLE PLACES (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    X INTEGER NOT NULL,
+    Y INTEGER NOT NULL,
+    FLOOR VARCHAR NOT NULL,
+    PRIMARY KEY (ID),
+    CONSTRAINT PLACES_FK_1 FOREIGN KEY (FLOOR) REFERENCES FLOORS(ID)
+);
+CREATE UNIQUE INDEX PLACES_NAME_INX ON PLACES(NAME);
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('1', 'Tabla 1', 133, 151, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('2', 'Tabla 2', 532, 151, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('3', 'Tabla 3', 133, 264, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('4', 'Tabla 4', 266, 264, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('5', 'Tabla 5', 399, 264, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('6', 'Tabla 6', 532, 264, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('7', 'Tabla 7', 133, 377, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('8', 'Tabla 8', 266, 377, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('9', 'Tabla 9', 399, 377, '0');
+INSERT INTO PLACES(ID, NAME, X, Y, FLOOR) VALUES ('10', 'Tabla 10', 532, 377, '0');
+
+CREATE TABLE RESERVATIONS (
+    ID VARCHAR NOT NULL,
+    CREATED TIMESTAMP NOT NULL,
+    DATENEW TIMESTAMP DEFAULT '2001-01-01 00:00:00' NOT NULL,
+    TITLE VARCHAR NOT NULL,
+    CHAIRS INTEGER NOT NULL,
+    ISDONE BOOLEAN NOT NULL,
+    DESCRIPTION VARCHAR,
+    PRIMARY KEY (ID)
+);
+CREATE INDEX RESERVATIONS_INX_1 ON RESERVATIONS(DATENEW);
+
+CREATE TABLE RESERVATION_CUSTOMERS (
+    ID VARCHAR NOT NULL,
+    CUSTOMER VARCHAR NOT NULL,
+    PRIMARY KEY (ID),
+    CONSTRAINT RES_CUST_FK_1 FOREIGN KEY (ID) REFERENCES RESERVATIONS(ID),
+    CONSTRAINT RES_CUST_FK_2 FOREIGN KEY (CUSTOMER) REFERENCES CUSTOMERS(ID)
+);
+
+CREATE TABLE THIRDPARTIES (
+    ID VARCHAR NOT NULL,
+    CIF VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    ADDRESS VARCHAR,
+    CONTACTCOMM VARCHAR,
+    CONTACTFACT VARCHAR,
+    PAYRULE VARCHAR,
+    FAXNUMBER VARCHAR,
+    PHONENUMBER VARCHAR,
+    MOBILENUMBER VARCHAR,
+    EMAIL VARCHAR,
+    WEBPAGE VARCHAR,
+    NOTES VARCHAR,
+    PRIMARY KEY (ID)
+);
+CREATE UNIQUE INDEX THIRDPARTIES_CIF_INX ON THIRDPARTIES(CIF);
+CREATE UNIQUE INDEX THIRDPARTIES_NAME_INX ON THIRDPARTIES(NAME);
+
+CREATE TABLE SHAREDTICKETS (
+    ID VARCHAR NOT NULL,
+    NAME VARCHAR NOT NULL,
+    CONTENT BYTEA,
+    PRIMARY KEY(ID)
+);
+
 
 INSERT INTO public.products(id, reference, code, codetype, name, pricebuy, pricesell, category, taxcat, attributeset_id, stockcost, stockvolume, image, iscom, isscale, attributes)
   VALUES('5b6c854e-05cc-4f3b-867e-6232a72cef45', '1234', '1234', NULL, 'Prueba Con IVA', 100, 150, '000', '001', NULL, NULL, NULL, NULL, false, false, NULL);
@@ -1483,4 +504,5 @@ INSERT INTO public.stockcurrent(location, product, attributesetinstance_id, unit
   VALUES('0', '5b6c854e-05cc-4f3b-867e-6232a72cef45', NULL, 30);
 INSERT INTO public.stockcurrent(location, product, attributesetinstance_id, units)
   VALUES('0', '51761c31-a72f-4624-80ba-b6a2af36c6c7', NULL, 50);
+
 
